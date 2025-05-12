@@ -1,6 +1,4 @@
-import sys
-import os
+from run import app 
 
-sys.path.insert(0, os.path.dirname(__file__))
-
-from run import app as application
+if __name__ == "__main__":
+    app.run()
