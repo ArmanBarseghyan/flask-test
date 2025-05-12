@@ -1,0 +1,422 @@
+.floor-info{
+    margin-top: 32px;
+    margin-bottom: -32px;
+
+    span, a{
+
+        font-size: 17px;
+    }
+}
+.map-section{
+    overflow-x: auto;
+}
+.map-container {
+    width: 100%;
+    min-width: 800px;
+    // max-width: 1000px;
+    // height: 500px;
+    margin: 0 auto;
+    overflow: hidden; /* Обязательно! */
+    position: relative; /* Для позиционирования кнопок */
+    cursor: grab; /* Курсор "рука" */
+    margin-top: 52px;
+    // * {
+    //     user-select: none;
+    // }
+
+    background: #333A45;
+    padding: 16px;
+    border-radius: 8px;
+}
+
+.shop-page-link{
+    
+    button{
+        cursor: pointer;
+    }
+}
+
+.map-container.dragging {
+    cursor: grabbing; /* Курсор при перетаскивании */
+}
+
+.svg-container {
+    display: flex;
+    background: #0E131B;
+    border-radius: 6px;
+   
+    width: 100%;
+    height: 100%;
+    transform-origin: 0 0; /* Устанавливаем начало координат */
+}
+
+.svg-container object {
+    width: 100%;
+    height: 100%;
+}
+
+.zoom-controls {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    z-index: 10; /* Чтобы кнопки были поверх карты */
+    pointer-events: none; /* Кнопки зума не блокируют клики по SVG */
+    width: 100%;
+    height: 100%;
+}
+
+.zoom-btn-control {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 24px;
+    gap: 8px;
+}
+
+.zoom-btn {
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 3px;
+    font-size: 20px;
+    background: #404957;
+    width: 42px;
+    height: 42px;
+    align-items: center;
+    transition: 0.2s;
+}
+
+.zoom-btn.active {
+    background: #ffffff;
+}
+
+.zoom-btn:hover {
+    background: #0B51B4;
+    transition: 0.2s;
+}
+
+.download._disabled {
+    pointer-events: none;
+    opacity: 0.5;
+    cursor: default;
+}
+
+
+// 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.shop-popup {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(3px); /* Добавил размытие фона */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 20;
+
+    
+    .popup-content {
+        background: #333A45;
+        
+        color: #fff;
+        // padding: 32px;
+        border-radius: 8px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+        max-width: 750px;
+        width: 90%;
+        position: relative;
+        display: flex; 
+        flex-direction: column; 
+        height: auto; 
+
+        overflow: hidden;
+        border-radius: 8px;
+    }
+    
+    .header-popup{
+        .banner-web{
+            width: 100%;
+            height: 160px;
+            background: #404957;
+            img{
+                object-fit: cover;
+                object-position: top;
+                width: 100%;
+                height: 100%;
+            }
+        }
+        .popup-logo__control{
+            margin-left: 32px;
+            margin-top: -42px;
+
+            border-radius: 3px;
+            background: #5A6D8D;
+            width: 180px;
+            height: 125px;
+
+            position: relative;
+            z-index: 2;
+
+            .popup-logo{
+                width: 100%;
+                height: 100%;
+                display: block;
+                object-fit: cover;
+                border-radius: 3px;
+            }
+        }
+    }
+    .grid{
+        display: grid;
+        grid-template-columns: 1fr 230px;
+        gap: 32px;
+
+        padding: 16px 32px 32px;
+        row-gap: 16px;
+        @media only screen and (max-width: 680px) {
+            grid-template-columns: 1fr;
+            padding: 16px;
+        }
+    }
+
+    .shop-page-button{
+        display: block;
+        margin-left: auto;
+        grid-column: 2 span;
+        padding: 12px 24px;
+        background: #0B51B4;
+        border-radius: 3px;
+        cursor: pointer;
+        @media only screen and (max-width: 680px) {
+            grid-column: unset;
+            margin-left: unset;
+            text-align: center;
+        }
+        &:hover{
+            color: #0E131B;
+            background: #fff;
+        }
+    }
+
+    .popup-close, .admin-edit_popup {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        
+        background: #0B51B4;
+        color: #fff;
+        padding: 10px 18px;
+        border-radius: 4px;
+
+        font-size: 16px;
+        transition: .2s;
+        
+        cursor: pointer;
+        &:hover{
+            transition: .2s;
+            background: #fff;
+            color: #0E131B;
+        }
+        &.admin-edit_popup{
+            right: 118px;
+        }
+    }
+
+   
+  
+
+    h3#popup-name {
+        font-size: 32px;
+        color: #ffffff;
+        text-align: left;
+        margin-bottom: 15px;
+        font-family: sans-serif;
+
+        font-family: g-b;
+    }
+
+    .popup-block-1 p,
+    .popup-block-2 p {
+        margin-bottom: 10px;
+        font-size: 0.95rem;
+    }
+
+    .popup-block-1 p strong,
+    .popup-block-2 p strong {
+        font-weight: bold;
+        color: #ffffff;
+    }
+
+    #popup-category {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    // #popup-subcategory {
+    //     /* Дополнительные стили для подкатегории, если нужно */
+    // }
+
+    #popup-description {
+        font-size: 16px;
+        color: #cecece;
+    }
+
+    .popup-block-2 {
+
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        p{
+            margin-bottom: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+            img{
+                width: 26px;
+                height: 26px;
+                object-fit: contain;
+            }
+        }
+    }
+
+    #popup-website {
+        transition: color 0.2s ease;
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+    
+    #category-row, #subcategories-row{
+        display: flex;
+        gap: 16px;
+        #popup-category, #popup-subcategories span{
+            background: #4b5564;
+            padding: 6px 16px;
+            border-radius: 4px;
+
+        }
+        #popup-subcategories{
+            display: flex;
+            gap: 8px;
+            span{
+                padding: 6px 12px;
+                font-size: 14px;
+            }
+        }
+    }
+    #category-row{
+        gap: 16px;
+        #popup-category{
+            background: #404956;
+        }
+        img{
+            width: 26px;
+            height: 26px;
+        }
+    }
+}
+
+
+
+
+// ОТДЕЛЬНАЯ ТЕМА
+// ОТДЕЛЬНАЯ ТЕМА
+// ОТДЕЛЬНАЯ ТЕМА
+// ОТДЕЛЬНАЯ ТЕМА
+// ОТДЕЛЬНАЯ ТЕМА
+
+
+.map-loader {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(3px);
+    z-index: 10;
+}
+
+/* Контейнер для прогресс-бара */
+.progress-container {
+    width: 80%;
+    max-width: 300px;
+    background-color: #f3f3f3;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Сам прогресс-бар */
+.progress-bar {
+    height: 20px;
+    width: 0%;
+    background: linear-gradient(90deg, #3498db, #2980b9);
+    border-radius: 8px;
+    transition: width 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Эффект пульсации для прогресс-бара */
+.progress-bar::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    animation: pulse 1.5s infinite;
+}
+
+/* Текст с процентами загрузки */
+.progress-text {
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    margin-top: 8px;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+/* Текст с информацией о загрузке */
+.progress-info {
+    font-size: 14px;
+    color: #f3f3f3;
+    margin-top: 5px;
+    text-align: center;
+}
+
+/* Анимация пульсации */
+@keyframes pulse {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}

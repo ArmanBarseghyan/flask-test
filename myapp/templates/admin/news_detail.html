@@ -1,0 +1,103 @@
+{# templates/admin/news_detail.html #}
+{% extends 'base.html' %}
+
+{% block title %}Редактирование: {{ news_item.title }}{% endblock %}
+
+{% block content %}
+<section class="admin-section news-edit-section">
+    <div class="content">
+        <h1>Редактирование: {{ news_item.title }}</h1>
+        <p><em>({{ news_item.type | capitalize }})</em></p>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul class="flashes">
+                    {% for category, message in messages %}
+                        <li class="{{ category }}">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+
+        <div id="news-content-editor" style="border: 1px solid #ccc; padding: 20px; margin-top: 20px;">
+            <h2>Редактор контента (<span id="content-type-display"></span>)</h2>
+
+            <form id="news-edit-form" method="POST" action="{{ url_for('admin.admin_news_detail', news_id=news_item.id) }}" enctype="multipart/form-data">
+                <p style="height: 1px; opacity: 0;">      {{ csrf_token() }} {# Обязательно для CSRF защиты #}</p>
+                <input type="hidden" id="news-type" name="news_type" value="{{ news_item.type }}">
+                {% if news_item.shop_id %}
+                    <input type="hidden" name="shop_id" value="{{ news_item.shop_id }}">
+                    <p><i>Привязано к магазину: {{ news_item.shop.shop_data.shop_name if news_item.shop and news_item.shop.shop_data else news_item.shop_id }}</i></p>
+                {% endif %}
+
+                <div class="form-group">
+                    <label for="news-title">Заголовок *</label>
+                    <input type="text" id="news-title" name="title" class="form-control" required value="{{ form_data.title if form_data else news_item.title }}">
+                </div>
+                <div class="form-group">
+                    <label for="news-short-description">Краткое описание</label>
+                    <textarea id="news-short-description" name="short_description" class="form-control" rows="3">{{ form_data.short_description if form_data else news_item.short_description }}</textarea>
+                </div>
+                <div class="form-group">
+                    <label for="news-icon">Иконка</label>
+                    <select id="news-icon" name="icon" class="form-control">
+                        <option value="">-- Не выбрана --</option>
+                    </select>
+                    <div id="icon-preview" style="margin-top: 10px;"></div>
+                    <small><a href="{{ url_for('admin.admin_category') }}#icon-management" target="_blank">Управление иконками</a></small>
+                </div>
+                <div class="form-group">
+                    <label for="news-banner">Главный баннер</label>
+                    {% if banner_url %} {# Используем переданный URL #}
+                        <div id="current-banner-preview" style="margin-bottom: 10px;">
+                            <img src="{{ banner_url }}" alt="Текущий баннер" style="max-width: 300px; max-height: 150px; border-radius: 4px;">
+                        </div>
+                    {% endif %}
+                    <label for="news-banner-upload" style="font-size:0.9em; color:#adb5bd;">{{ "Заменить баннер:" if banner_url else "Загрузить баннер:" }}</label>
+                    <input type="file" id="news-banner-upload" name="banner_image" class="form-control-file" accept="image/png, image/jpeg, image/gif">
+                </div>
+                <div class="form-group form-check">
+                    {% set current_published_status = form_data.is_published == 'on' if form_data is defined else news_item.is_published %}
+                    <input type="checkbox" class="form-check-input" id="is_published" name="is_published" {% if current_published_status %}checked{% endif %}>
+                    <label class="form-check-label" for="is_published">Опубликовано</label>
+                </div>
+
+                <hr>
+                <h3>Блоки контента</h3>
+                <div id="content-blocks-container"></div>
+                <div id="add-block-buttons" style="margin-top: 15px; border-top: 1px dashed #ccc; padding-top: 15px;">
+                    <button type="button" class="button button-secondary add-block-btn" data-block-type="heading">Добавить заголовок</button>
+                    <button type="button" class="button button-secondary add-block-btn" data-block-type="text">Добавить текст</button>
+                    <button type="button" class="button button-secondary add-block-btn" data-block-type="image">Добавить картинку</button>
+                    <button type="button" class="button button-secondary add-block-btn" data-block-type="list">Добавить список</button>
+                    <button type="button" class="button button-secondary add-block-btn" data-block-type="link">Добавить ссылку</button>
+                </div>
+                <hr>
+
+                <input type="hidden" name="content_blocks_data" id="content-blocks-data-input">
+
+                <div style="margin-top: 20px;">
+                    <button type="submit" class="button button-success">Сохранить изменения</button>
+                    <a href="{{ url_for('admin.admin_news') }}" class="button">Отмена</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<script src="{{ url_for('static', filename='js/admin_news_detail_editor.js') }}?v={{ timestamp }}"></script>
+
+<script>
+    // Определяем переменные, необходимые ДЛЯ admin_news_detail_editor.js
+    const iconListUrl = "{{ url_for('admin.get_uploaded_icons') }}";
+    const newsImageUploadUrl = "{{ url_for('admin.upload_news_image') }}";
+    const editMode = true; // Флаг режима редактирования
+    const existingNewsData = {
+        // Передаем выбранную иконку (если есть)
+        icon: "{{ (form_data.icon if form_data else news_item.icon) | default('', true) }}",
+        // Передаем JSON блоков контента, подготовленный в Python
+        contentBlocks: JSON.parse({{ content_blocks_json | tojson | safe }})
+    };
+    // csrfToken здесь не нужен, так как getCsrfToken() в JS будет искать его в DOM
+</script>
+{% endblock %}

@@ -1,0 +1,228 @@
+{% extends 'base.html' %}
+
+{% block title %}Редактирование магазина {{ shop.id }}{% endblock %}
+
+{% block content %}
+<section class="shop-detail-section shop-detail-section__admin">
+    <div class="content">
+        <h1>Редактирование магазина: <span>{{ shop.id }}</span></h1>
+        <div class="shop-actions">
+            {# ... возможно, другие кнопки действий ... #}
+        
+            {# --- Кнопка создания новости/акции для этого магазина --- #}
+            <a href="{{ url_for('admin.admin_news_create', shop_id=shop.id) }}" class="button button-primary">
+                <i class="fas fa-plus"></i> Создать новость/акцию для магазина <!-- Можешь добавить иконку, если используешь FontAwesome и т.п. -->
+            </a>
+            {# --- Конец кнопки --- #}
+        </div>
+        <a class="back-button" href="{{ url_for('admin.admin_shops') }}"><button>Назад к управлению магазинами</button></a>
+
+        <div class="form-control">
+            <form id="shopForm" method="POST" enctype="multipart/form-data"
+            data-shop-id="{{ shop.id }}"
+            data-category-id="{{ shop_data.category_id if shop_data.category_id else '' }}"
+            data-subcategory-ids="{% for sub in shop_data.subcategories %}{{ sub.id }}{% if not loop.last %},{% endif %}{% endfor %}">
+                <div class="right-block">
+                    <!-- Название магазина -->
+                    <div class="form-group __edit shop-name__g">
+                        <label for="shop_name">Название магазина:</label>
+                        <input type="text" id="shop_name" name="shop_name" value="{{ shop_data.shop_name | default('Свободный павильон') }}">
+                    </div>
+            
+                    <!-- Категория -->
+                    <div class="category-selection-group">
+                        <div class="category-list_control">
+                            <div class="category-select-item">
+                                <h3 for="category-select-btn" class="category-select-label">Выбрать категорию для магазина</h3>
+                                <button type="button" id="category-select-btn" class="category-select-btn" onclick="toggleCategoryMenu()">Выбрать категорию</button>
+                            </div>
+                            
+                            <div class="category-menu-dropdown" id="category-menu" style="display: none;">
+                                <button type="button" class="category-option" data-category-id="" onclick="selectCategory(null)">Без категории</button>
+                                {% for category in categories %}
+                                    <button type="button" class="category-option" data-category-id="{{ category.id }}" onclick="selectCategory('{{ category.id }}')">
+                                        <img src="{{ url_for('static', filename='uploads/category_icons/' + category.icon_path) if category.icon_path else url_for('static', filename='images/vector/default-icon.svg') }}" alt="{{ category.name }}" class="category-icon">
+                                        <span class="category-name">{{ category.name }}</span>
+                                    </button>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="selected-category-block">
+                            <h3 class="selected-category-title">Текущая категория</h3>
+                            <div class="selected-category" id="selected-category" style="display: {{ 'none' if not shop_data.category else 'flex' }}">
+                                <img src="{{ url_for('static', filename='uploads/category_icons/' + shop_data.category.icon_path) if shop_data.category and shop_data.category.icon_path else url_for('static', filename='images/vector/default-icon.svg') }}" alt="{{ shop_data.category.name if shop_data.category else 'Нет категории' }}" class="selected-category-icon">
+                                <span class="selected-category-name">{{ shop_data.category.name if shop_data.category else 'Категория не выбрана' }}</span>
+                            </div>
+                            <div class="no-category-selected" id="no-category" style="display: {{ 'block' if not shop_data.category else 'none' }}">
+                                Пока без категории
+                            </div>
+                        </div>
+                        <div class="subcategory-selection-list" id="subcategory-list" style="display: none;">
+                            <h3 class="subcategory-list-title">Выберите подкатегории:</h3>
+                            <div class="subcategory-options" id="subcategory-options">
+                                </div>
+                        </div>
+                        
+                        <div class="selected-subcategories-block">
+                            <h3 class="selected-subcategories-title">Текущие подкатегории для этого магазина</h3>
+                            <ul class="selected-subcategories-list" id="selected-subcategories">
+                                {% for sub in shop_data.subcategories %}
+                                    <li class="selected-subcategory-item" data-subcategory-id="{{ sub.id }}">
+                                        <span class="subcategory-name">[{{ sub.name }}]</span>
+                                        <button type="button" class="remove-subcategory-button" onclick="removeSubcategory('{{ sub.id }}')">Удалить</button>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <input type="hidden" name="category_id" id="category_id" value="{{ shop_data.category_id if shop_data.category_id else '' }}">
+                        <input type="hidden" name="subcategory_ids" id="subcategory_ids" value="{% for sub in shop_data.subcategories %}{{ sub.id }}{% if not loop.last %},{% endif %}{% endfor %}">
+                    </div>
+            
+                    <!-- Логотип -->
+                    <div class="form-group __edit shop-logo__block">
+                        <div class="logo-group">
+                            {% if shop_data.shop_logo %}
+                                <p>Текущий логотип: <img src="{{ url_for('static', filename='uploads/shop_logos/' + shop.id + '/' + shop_data.shop_logo) }}" alt="logo" ></p>
+                            {% endif %}
+                            <label for="shop_logo" class="shop-logo__btn">Загрузить логотип</label>
+                            <input type="file" id="shop_logo" name="shop_logo" accept="image/*" style="display: none;">
+                            <div class="logo-info"></div>
+                            
+                        </div>
+                        <div class="group">
+                            <!-- Описание -->
+                            <div class="form-group textarea-block">
+                                <label>Описание:</label>
+                                <div class="textarea-box">
+                                    {% for desc in descriptions %}
+                                        <div class="textarea-item">
+                                            <textarea name="description" rows="5">{{ desc.description }}</textarea>
+                                            <button type="button" onclick="this.parentElement.remove()">Удалить</button>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                <div class="add-textarea">
+                                    <button type="button" class="button" onclick="addTextarea()">Добавить блок описания</button>
+                                </div>
+                            </div>
+                        
+                        </div>
+                        <!-- Галерея -->
+                        <div class="gallery-block">
+                            <div class="gallery-box">
+                                {% for image in gallery_images %}
+                                    <div class="image" data-image-id="{{ image.id }}">
+                                        <img src="{{ url_for('static', filename='uploads/shop_logos/' + shop.id + '/' + image.image_path) }}" alt="gallery" >
+                                        <button type="button" onclick="deleteImage('{{ image.id }}', '{{ shop.id }}')">Удалить</button>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            
+                            <div class="duble">
+                                <div class="add-gallery">
+                                    <label for="gallery_images" class="button">Загрузить картинку</label>
+                                    <input type="file" id="gallery_images" name="gallery_images" accept="image/*" multiple style="display: none;">
+                                </div>
+                                <div class="gallery-info"></div>
+                            </div>
+                        </div>
+                    </div>
+                     
+                    <!-- Новый блок для баннера и логотипа схемы -->
+                    <div class="form-group __edit shop-banner-scheme__block">
+                        <!-- Логотип для схемы -->
+                        <div class="scheme-logo-upload">
+                            <div class="logo-shema-item__logo">
+                                <label for="scheme_logo" class="scheme-logo__btn">Загрузить логотип для схемы</label>
+                                <input type="file" id="scheme_logo" name="scheme_logo" accept="image/*" style="display: none;">
+                                {% if shop_data.scheme_logo %}
+                                    <p class="logo-shema-selected">
+                                        Текущий логотип для схемы: 
+                                        <div class="logo-shema-selected__control">
+                                            <img src="{{ url_for('static', filename='uploads/shop_logos/' + shop.id + '/' + shop_data.scheme_logo) }}" alt="scheme logo">
+                                        </div>    
+                                    </p>
+                                {% endif %}
+                            </div>
+                            <div class="scheme-logo-info">
+                                <!-- Параметры для логотипа схемы -->
+                                <div class="item-row">
+                                    <label for="scheme_logo_width">Ширина (px):</label>
+                                    <input type="number" id="scheme_logo_width" name="scheme_logo_width" value="{{ shop_data.scheme_logo_width | default(30) }}">
+                                </div>
+                                <div class="item-row">
+                                    <label for="scheme_logo_height">Высота (px):</label>
+                                    <input type="number" id="scheme_logo_height" name="scheme_logo_height" value="{{ shop_data.scheme_logo_height | default(30) }}">
+                                </div>
+                                <div class="item-row">
+                                    <label for="scheme_logo_x">X (px):</label>
+                                    <input type="number" id="scheme_logo_x" name="scheme_logo_x" value="{{ shop_data.scheme_logo_x | default(0) }}">
+                                </div>
+                                <div class="item-row">
+                                    <label for="scheme_logo_y">Y (px):</label>
+                                    <input type="number" id="scheme_logo_y" name="scheme_logo_y" value="{{ shop_data.scheme_logo_y | default(0) }}">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Баннер -->
+                        <div class="banner-upload">
+                            {% if shop_data.shop_banner %}
+                                <div class="banner-upload__header">
+                                    <p>Текущий баннер:</p>
+                                    <div class="banner-upload__image">
+                                        <img src="{{ url_for('static', filename='uploads/shop_logos/' + shop.id + '/' + shop_data.shop_banner) }}" alt="banner">
+                                    </div>
+                                </div>
+                            {% endif %}
+                            <label for="shop_banner" class="shop-banner__btn">Загрузить баннер</label>
+                            <input type="file" id="shop_banner" name="shop_banner" accept="image/*" style="display: none;">
+                            <div class="banner-info"></div>
+                        </div>
+                        
+                    </div>
+
+                   <div class="sub-info">
+                     <!-- Веб-ссылка -->
+                        <div class="form-group link-form__group">
+                            <div class="item">
+                                <label for="web_text">Текст ссылки:</label>
+                                <input type="text" id="web_text" name="web_text" value="{{ shop_data.web_text | default('Сайт') }}">
+                            </div>
+                            <div class="item">
+                                <label for="web_url">URL ссылки (необязательно):</label>
+                                <input type="text" id="web_url" name="web_url" value="{{ shop_data.web_url | default('') }}">
+                            </div>
+                        </div>
+                
+                        <!-- Время работы -->
+                        <div class="form-group work-time__group">
+                            <label for="work_time">Время работы:</label>
+                            <input type="text" id="work_time" name="work_time" value="{{ shop_data.work_time | default('10:00-22:00') }}" placeholder="например, 10:00-22:00">
+                        </div>
+                   </div>
+                </div>
+            
+                
+            
+                <button class="save-change" id="saveButton" type="submit" name="form_action" value="update_details">Сохранить изменения</button>
+                <button class="clear-folder" type="button" onclick="clearShopFolder('{{ shop.id }}')">Очистить корневую папку магазина</button>
+            </form>
+            <div id="message">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        <ul class="flashes">
+                            {% for category, message in messages %}
+                                <li class="{{ category }}">{{ message }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                {% endwith %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/shop_detail.js') }}"></script>
+{% endblock %}

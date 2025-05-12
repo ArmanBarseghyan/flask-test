@@ -1,0 +1,184 @@
+@font-face {
+    font-family: m-l;
+    src: url(../fonts/Montserrat-Light.ttf);
+}
+@font-face {
+    font-family: m-r;
+    src: url(../fonts/Montserrat-Regular.ttf);
+}
+@font-face {
+    font-family: m-m;
+    src: url(../fonts/Montserrat-Medium.ttf);
+}
+@font-face {
+    font-family: m-sb;
+    font-weight: 700;
+    src: url(../fonts/Montserrat-SemiBold.ttf);
+}
+@font-face {
+    font-family: g-l;
+    src: url(../fonts/Gilroy-Light.otf);
+}
+@font-face {
+    font-family: g-r;
+    src: url(../fonts/Gilroy-Regular.ttf);
+}
+@font-face {
+    font-family: g-m;
+    src: url(../fonts/gilroy-medium.ttf);
+    // font-weight: 800;
+}
+@font-face {
+    font-family: g-b;
+    src: url(../fonts/Gilroy-Bold.ttf);
+}
+@font-face {
+    font-family: g-eb;
+    src: url(../fonts/Gilroy-ExtraBold.otf);
+}
+// @font-face {
+//     font-family: g-m;
+//     src: url(../fonts/Gilroy-Medium.woff);
+// }
+// @font-face {
+//     font-family: i-l;
+//     src: url(../fonts/Inter-Light.ttf);
+// }
+// @font-face {
+//     font-family: i-r;
+//     src: url(../fonts/Inter-Regular.ttf);
+// }
+
+// @font-face {
+//     font-family: i-m;
+//     src: url(../fonts/Inter-Medium.ttf);
+
+// }
+// @font-face {
+//     font-family: i-b;
+//     src: url(../fonts/Inter-Bold.ttf);
+// }
+
+// Colors
+
+// // - Neutral
+// $Black: #18191F;
+// $D_Grey: #4D4D4D;
+// $Grey: #717171;
+// $L_Grey: #89939E;
+// $Grey-blue: #ABBED1;
+// $Silver: #F5F7FA;
+// $White: #FFFFFF;
+
+// $Primary: #28CB8B;
+// $Secondary: #263238;
+// $Info: #2194f3;
+
+// // - Color Shade
+
+// $Shade1: #43A046;
+// $Shade2: #388E3B;
+// $Shade3: #237D31;
+// $Shade4: #1B5E1F;
+// $Shade5: #103E13;
+
+// // - Color Tint
+
+// $Tint1: #66BB69;
+// $Tint2: #81C784;
+// $Tint3: #A5D6A7;
+// $Tint4: #C8E6C9;
+// $Tint5: #E8F5E9;
+
+// // - Action
+
+// $Warning: #FBC02D;
+// $Error: #E53835;
+// $Success: #2E7D31;
+
+// $topSectionNoteBook_L: 100px;
+
+// $topSectionwindowTablet: 72px;
+
+// // Настройка интерфейса экрана
+
+// $windowX: 
+$windowNotebook_L: 1400px;
+$windowNotebook: 960px;
+$windowTablet: 650px; 
+// change
+$windowMobile: 344px+120px;
+
+// @import 'header';
+// @import 'footer';
+
+
+
+// @import 'contact';
+// @import 'faq';
+
+// @import 'popup';
+
+
+@import 'interface';
+@import 'admin/login';
+@import 'admin/category';
+@import 'admin/category_detail';
+@import 'admin/for-tenants';
+@import 'admin/contact';
+@import 'admin/news';
+@import 'admin/news_detail';
+@import 'admin/news_create';
+
+@import 'user/how_to_get';
+@import 'user/contact-section';
+@import 'user/component_contact';
+@import 'user/notfoundpage';
+@import 'user/privacy';
+@import 'user/shop-section';
+@import 'user/shop-detail-section';
+@import 'user/category-index';
+@import 'user/for_tenants';
+@import 'user/news';
+@import 'user/news_detail';
+@import 'user/shop-detail-news-content';
+@import 'user/news_card';
+@import 'user/shema-section';
+@import 'user/hero-banner';
+@import 'user/about-page-content';
+
+@import 'header';
+@import 'footer';
+
+
+
+ 
+// @import 'limiter';
+// @import 'advantages';
+// @import 'benefit';
+// @import 'team';
+
+// @import 'services';
+
+// @import 'cases';
+
+// @import 'reviews';
+
+// @import 'blog';
+
+// @import 'complex-design-services';
+// @import 'service-cost';
+// @import 'implemented-projects';
+
+// @import 'full-service-offering';
+
+// @import 'rosreestr-approval-process';
+// @import 'rosreestr-documents';
+// @import 'rosreestr-project-requirements';
+// @import 'timeline-cost';
+
+@import 'edit';
+@import 'map'
+// @import 'work-process';
+
+// @import 'completed-projects';

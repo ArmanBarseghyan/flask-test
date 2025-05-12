@@ -1,0 +1,215 @@
+{% extends 'base.html' %}
+
+{% block title %}Контакты{% endblock %}
+
+{% block content %}
+    <section class="contact-section">
+        <div class="content">
+            <h1>Контакты</h1>
+
+            {# --- Отображение ТОЛЬКО сообщений формы контактов --- #}
+            {# Используем category_filter для получения сообщений только нужных категорий #}
+            {% with messages = get_flashed_messages(with_categories=true, category_filter=["contact_success", "contact_error"]) %}
+            {% if messages %}
+                {# Класс flash-messages можно оставить или поменять #}
+                <div class="flash-messages contacts-flash" style="margin-bottom: 20px;">
+                {% for category, message in messages %}
+                {# Определяем класс alert в зависимости от категории #}
+                {% set alert_class = 'alert-success' if category == 'contact_success' else 'alert-danger' %}
+                <div class="alert {{ alert_class }}">{{ message }}</div>
+                {% endfor %}
+                </div>
+            {% endif %}
+            {% endwith %}
+            {# ------------------------------------------------------ #}
+
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    const alerts = document.querySelectorAll('.contacts-flash .alert');
+
+                    alerts.forEach((alert, index) => {
+                        setTimeout(() => {
+                        alert.classList.add('show');
+                        }, 100 * index); // Задержка для каждого сообщения
+                    });
+                });
+            </script>
+
+            <div class="grid">
+                {# Добавляем method="POST" #}
+                <form method="POST" action="{{ url_for('user.contacts') }}">
+                    {# Добавляем CSRF токен - ВАЖНО для безопасности #}
+
+                    <h6>Свяжитесь с нами</h6>
+                    <div class="item">
+                        <input type="text" name="name" placeholder="Ваше имя*" required>
+                    </div>
+                    <div class="item">
+                        <input type="email" name="email" placeholder="Email адрес*" required>
+                    </div>
+                    <div class="item">
+                        <input type="tel" name="phone" placeholder="Номер телефона*" required>
+                    </div>
+                    <div class="item">
+                        <textarea name="message" id="message" placeholder="Сообщение*" required></textarea>
+                    </div>
+
+                    {# --- Блок CAPTCHA --- #}
+                    {# Обернем в div для удобства размещения кнопки #}
+                    <div class="item captcha-container">
+                        <div class="captcha-field">
+                            {# Отображаем изображение капчи #}
+                            <div class="captcha-image-wrapper">
+                                {% if captcha_image %}
+                                    {# !!! Добавляем ID к картинке !!! #}
+                                    <img id="captcha-image" src="data:image/png;base64,{{ captcha_image }}" alt="CAPTCHA">
+                                {% else %}
+                                    <p class="fall-load__captcha">Ошибка загрузки CAPTCHA</p>
+                                {% endif %}
+                            </div>
+                            {# Поле для ввода текста с капчи #}
+                            <div class="captcha-input-field">
+                                 <input type="text" name="captcha" placeholder="Введите текст с картинки*" required autocomplete="off" style="width: 100%;"> {# Убрал flex стили отсюда #}
+                            </div>
+                            {# !!! Добавляем кнопку Обновить !!! #}
+                        </div>
+                        <button type="button" id="refresh-captcha-btn" title="Обновить картинку">Обновить</button>
+                       
+                    </div>
+                    {# --- Конец блока CAPTCHA --- #}
+
+                    <div class="re-item"> {# Добавил отступ сверху #}
+                        <button type="submit">Отправить</button>
+                    </div>
+                     <p>Нажимая «Отправить», вы соглашаетесь на обработку персональных данных согласно <a href="{{ url_for('user.privacy') }}">Политике конфиденциальности</a></p>
+                </form>
+
+                <div class="contact-block">
+
+                    {# --- Блок "График работы" --- #}
+                    {# Показываем, если есть или дни, или время #}
+                    {% if content.get('work_schedule_days') or content.get('work_schedule_time') %}
+                    <div class="item">
+                        {# Иконка часов (добавляем div с классом для иконки, если нужно по твоей верстке) #}
+                        {# Если иконка добавляется к h6, оставь как есть. Если к блоку - добавь класс #}
+                        <h6>График работы</h6>
+                        <div class="text-box"> {# У этого блока, возможно, тоже была иконка? #}
+                            {% if content.get('work_schedule_days') %}
+                                <p>{{ content.get('work_schedule_days') }}</p>
+                            {% endif %}
+                            {% if content.get('work_schedule_time') %}
+                                <p>{{ content.get('work_schedule_time') }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    {# --- Конец блока "График работы" --- #}
+                
+                
+                    {# --- Блок с контактами (телефон, email, адрес) --- #}
+                    {# Показываем этот блок, только если есть хотя бы один из контактов #}
+                    {% if content.get('contact_phone_display') or content.get('contact_email') or content.get('contact_address_text') %}
+                    <div class="item">
+                        <h6>Контакты</h6>
+                        <div class="text-link_box"> {# Этот блок содержит элементы с иконками #}
+                
+                            {# Телефон: показываем, если есть display name #}
+                            {% if content.get('contact_phone_display') %}
+                                {# Используем div с классом phone, внутри ссылка <a> для работы ::before #}
+                                <div class="phone">
+                                    {% set phone_raw = content.get('contact_phone_raw', '') %}
+                                    {% if phone_raw %}
+                                        {# Если есть raw номер, делаем кликабельную ссылку #}
+                                        <a href="tel:{{ phone_raw }}">{{ content.get('contact_phone_display') }}</a>
+                                    {% else %}
+                                        {# Если нет raw номера, ссылка не кликабельна, но <a> нужен для CSS иконки #}
+                                        {# Можно убрать href или поставить href="#" #}
+                                        <a>{{ content.get('contact_phone_display') }}</a>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                
+                            {# Email: показываем, если он есть #}
+                            {% if content.get('contact_email') %}
+                                 {# Используем div с классом mail, внутри ссылка <a> для работы ::before #}
+                                <div class="mail">
+                                    <a href="mailto:{{ content.get('contact_email') }}">{{ content.get('contact_email') }}</a>
+                                </div>
+                            {% endif %}
+                
+                            {# Адрес: показываем, если есть текст адреса #}
+                            {% if content.get('contact_address_text') %}
+                                 {# Используем div с классом locate, внутри ссылка <a> для работы ::before #}
+                                <div class="locate">
+                                    {% set addr_url = content.get('contact_address_url', '') %}
+                                    {% if addr_url %}
+                                        {# Если есть URL, делаем внешней ссылкой #}
+                                        <a href="{{ addr_url }}" target="_blank">{{ content.get('contact_address_text') }}</a>
+                                    {% else %}
+                                         {# Если нет URL, ссылка не кликабельна, но <a> нужен для CSS иконки #}
+                                        <a>{{ content.get('contact_address_text') }}</a>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                
+                        </div>
+                    </div>
+                    {% endif %}
+                    {# --- Конец блока с контактами --- #}
+                
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {# !!! Добавляем JavaScript код в конец блока content !!! #}
+    <script>
+        // Находим кнопку и картинку
+        const refreshButton = document.getElementById('refresh-captcha-btn');
+        const captchaImage = document.getElementById('captcha-image');
+        const captchaInput = document.querySelector('input[name="captcha"]');
+
+        // Добавляем обработчик клика на кнопку
+        refreshButton.addEventListener('click', async () => {
+            try {
+                // Показываем индикатор загрузки (опционально)
+                refreshButton.disabled = true;
+                refreshButton.textContent = 'Загрузка...';
+
+                // Отправляем GET-запрос на наш новый эндпоинт
+                const response = await fetch('{{ url_for("user.refresh_captcha") }}'); // Используем url_for для генерации URL
+
+                if (!response.ok) {
+                    // Если сервер ответил ошибкой
+                    throw new Error(`Ошибка сети: ${response.statusText}`);
+                }
+
+                // Получаем JSON-ответ
+                const data = await response.json();
+
+                if (data && data.image_b64) {
+                    // Если в ответе есть новая картинка (base64)
+                    // Обновляем атрибут src у картинки
+                    captchaImage.src = 'data:image/png;base64,' + data.image_b64;
+                    // Очищаем поле ввода капчи, т.к. текст изменился
+                    if (captchaInput) {
+                        captchaInput.value = '';
+                    }
+                } else {
+                    // Если в ответе нет картинки
+                    console.error('Не удалось получить новое изображение CAPTCHA из ответа');
+                    alert('Не удалось обновить картинку. Попробуйте снова.');
+                }
+
+            } catch (error) {
+                // Если произошла ошибка при запросе или обработке
+                console.error('Ошибка при обновлении CAPTCHA:', error);
+                alert('Произошла ошибка при обновлении картинки.');
+            } finally {
+                 // В любом случае (успех или ошибка) возвращаем кнопку в исходное состояние
+                 refreshButton.disabled = false;
+                 refreshButton.textContent = 'Обновить';
+            }
+        });
+    </script>
+{% endblock %}

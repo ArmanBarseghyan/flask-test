@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %}Схема этажей{% endblock %}
+
+{% block content %}
+    <section class="shema-section">
+        <div class="content">
+            <h1>Схема ТЦ</h1>
+        </div>  
+            {% if current_floor_id %}
+                <!-- <h2>Текущий этаж: {{ maps.floors[current_floor_id].name }}</h2> -->
+
+    
+
+                <!-- Блок категорий -->
+                <!-- Блок категорий -->
+                <section class="category-section__navigation __shema">
+                    <div class="content category-content">
+                        {% if categories %}
+                            {% for category in categories %}
+                                <button class="category-item" data-category-id="{{ category.id }}" onclick="highlightCategory('{{ category.id }}')">
+                                    <img src="{{ url_for('static', filename='uploads/category_icons/' + category.icon_path) if category.icon_path else url_for('static', filename='images/vector/default-icon.svg') }}" alt="{{ category.name }}" onerror="this.onerror=null; this.src='{{ url_for('static', filename='images/vector/default-icon.svg') }}'">
+                                    <span>{{ category.name }}</span>
+                                    <span class="category-color" style="background-color: {{ category.color | default('#FF5733') }};"></span> <!-- Добавляем цвет -->
+                                </button>
+                            {% endfor %}
+                        {% else %}
+                            <p class="no-categories">Категории пока не созданы.</p>
+                        {% endif %}
+                    </div>
+                </section>
+            <div class="content">
+                <div class="floor-switcher __shema">
+                    {% for floor_id, floor_data in maps.floors.items() %}
+                        {% if floor_id == current_floor_id %}
+                            <span class="active-floor">{{ floor_data.name }}</span>
+                        {% else %}
+                            <a href="{{ url_for('user.shema', id=floor_id) }}" class="floor-link">{{ floor_data.name }}</a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+                {% include 'components/map.html' %}
+                {% else %}
+                    <p>Этажи не созданы.</p>
+                {% endif %}
+            </div>
+        <!-- </div> -->
+    </section>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        // Передаем данные о магазинах в JS
+        const shopData = {{ shops | tojson }};
+    </script>
+{% endblock %}

@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %}Как добраться{% endblock %}
+
+{% block content %}
+    <section class="how-to-get">
+        <div class="content">
+            <h1>Как добраться</h1>
+            <div class="grid">
+                <div class="item">
+                    <div class="head">
+                        <img src="{{ url_for('static', filename='images/vector/carsvg.svg') }}" alt="car">
+                        <h6>На машине</h6>
+                    </div>
+                    <div class="text-box">
+                        <p>Подземная автомобильная парковка на 136 мест. Заезды на парковку со сторон 4-я и 5-я Парковая улица</p>
+                        <p>Стоимость: первые 15 минут - бесплатно, далее - 50 р. / час</p>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="head">
+                        <img src="{{ url_for('static', filename='images/vector/transvg.svg') }}" alt="car">
+                        <h6>На метро</h6>
+                    </div>
+                    <div class="text-box">
+                        <p>Пешая доступность от станций метро: "Измайловская" и "Первомайская"</p>
+                        
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="head">
+                        <img src="{{ url_for('static', filename='images/vector/bussvg.svg') }}" alt="car">
+                        <h6>На автобусе</h6>
+                    </div>
+                    <div class="text-box">
+                        <p>Остановка: 5-я Парковая улица - «Театр кукол» Автобус: 34, Н3 Маршрутка: 272м, 322м Трамвай: 11, 34, 34к Троллейбус: 322, 87</p>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="iframe-block">
+                <div style="position:relative;overflow:hidden;">
+                    <iframe src="https://yandex.ru/map-widget/v1/?indoorLevel=1&ll=37.787121%2C55.792615&mode=search&ol=geo&ouri=ymapsbm1%3A%2F%2Fgeo%3Fdata%3DCgo2MjUxNDM0NDYwEkPQoNC-0YHRgdC40Y8sINCc0L7RgdC60LLQsCwg0J_QtdGA0LLQvtC80LDQudGB0LrQsNGPINGD0LvQuNGG0LAsIDQyIgoNAyYXQhWkK19C&utm_source=ntp_chrome&z=17.64" frameborder="1" allowfullscreen="true" style="position:relative;"></iframe>
+                </div>
+            </div>
+
+
+            <div class="component_contact">
+                <div class="content">
+                    <div class="item">
+                        <h6>График работы</h6>
+                        <div class="text-box">
+                            <p>пн вт ср чт пт сб вс</p>
+                            <p>10:00-22:00</p>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <h6>Контакты</h6>
+                        <div class="text-link_box">
+                            <div class="phone"><a href="">+7 (495) 228-95-20</a></div>
+                            <div class="email"><a href="">info@izmaylovskiy.ru</a></div>
+                            <div class="locate"><a href="">Первомайская, дом 42, Москва</a></div>
+                        </div>
+                    </div>
+
+
+                    <img class="ct-fon_vector" src="{{ url_for('static', filename='images/vector/contvectors.svg') }}" alt="fon-vector">
+                </div>
+            </div>
+
+        </div>
+    </section>
+{% endblock %}

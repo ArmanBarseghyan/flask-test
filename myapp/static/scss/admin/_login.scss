@@ -1,0 +1,53 @@
+.login-section{
+    display: flex;
+    // justify-content: center;
+    align-items: center;
+
+    height: 80vh;
+
+    .content{
+        
+        max-width: 400px;
+        padding: 32px 16px 42px;
+        border-radius: 6px;
+        background: #1B2028;
+        h1{
+            font-size: 18px;
+        }
+        .l-image{
+            display: flex;
+            justify-content: center;
+        }
+
+        form{   
+            display: grid;
+            gap: 18px;
+            margin-top: 42px;
+            color: #fff;
+            .input{
+                display: grid;
+                gap: 6px;
+                input{
+                    border-radius: 3px;
+                    background: #333A45;
+                    padding: 13px;
+                    width: 100%;
+                }
+            }
+            input:nth-child(3){
+                cursor: pointer;
+                text-align: center;
+                background: #0B51B4;
+                padding: 13px 0;
+                width: 100%;
+                border-radius: 3px;
+                transition: .2s;
+                &:hover{
+                    background: #fff;
+                    transition: .2s;
+                    color: #333A45;
+                }
+            }
+        }
+    }
+}

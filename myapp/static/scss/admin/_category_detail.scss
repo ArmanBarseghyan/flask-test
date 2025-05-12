@@ -1,0 +1,487 @@
+// static/css/category_detail.scss
+
+.category-detail-section {
+    margin-top: 64px;
+    .color-box {
+        display: inline-block;
+        width: 28px;
+        height: 28px;
+        border: 1px solid #0E131B;
+        // margin-left: 10px;
+        border-radius: 3px;
+        vertical-align: middle;
+        cursor: pointer;
+    }
+
+    .palitra{
+        display: flex;
+        width: 50px;
+        height: 50px;
+        position: relative;
+    }
+ 
+    .color-preview {
+        margin-top: 24px;
+        span{
+            font-size: 16px;
+        }
+        .duble{
+            margin-top: 10px;
+            padding: 16px;
+            border-radius: 3px;
+            background: #333A45;
+
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            max-width: 300px;
+        }
+    }
+    h1 {
+        font-size: 32px;
+        font-family: g-b;
+
+        display: flex;
+        gap: 16px;
+        align-items: center;
+
+        span{
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            font-size: 28px;
+
+            background: #1B2028;
+            padding: 12px 32px;
+            border-radius: 4px;
+            img{
+                display: block;
+            }
+        }
+    }
+
+    .back-button {
+        margin-top: 16px;
+        display: block;
+        button {
+            background: #0B51B4;
+            padding: 8px 16px;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: .2s;
+            &:hover {
+                background: #fff;
+                color: #1B2028;
+            }
+        }
+    }
+
+    .form-control {
+        margin-top: 32px;
+        background: #1B2028;
+        padding: 16px;
+        border-radius: 4px;
+
+        .form-group {
+            margin-bottom: 16px;
+            label {
+                font-size: 16px;
+                display: block;
+                margin-bottom: 8px;
+            }
+            input[type="text"] {
+                padding: 10px 16px;
+                border-radius: 3px;
+                background: #333A45;
+                width: 100%;
+                max-width: 300px;
+                &::placeholder {
+                    color: #cecece;
+                }
+            }
+            .icon-preview {
+                margin-bottom: 8px;
+                img {
+                    border-radius: 4px;
+                }
+            }
+            button {
+                background: #0B51B4;
+                padding: 8px 16px;
+                border-radius: 3px;
+                cursor: pointer;
+                transition: .2s;
+                &:hover {
+                    background: #fff;
+                    color: #1B2028;
+                }
+            }
+        }
+        button[type="submit"], button[type="button"] {
+            margin-right: 12px;
+            background: #0B51B4;
+            padding: 10px 32px;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: .2s;
+            &:hover {
+                background: #fff;
+                color: #1B2028;
+            }
+           
+
+            &.save-update_category{
+                background: #087e08;
+                &:hover{
+                    // color: #fff;
+                    background: #fff;
+                }
+            }
+        }
+        .category_del {
+            background: #cc3333!important;
+            &:hover {
+                background: #b12929!important;
+                color: #fff!important;
+            }
+        }
+       
+    }
+    
+  
+
+    .subcategory-list {
+        margin-top: 32px;
+        background: #1B2028;
+        padding: 16px;
+        border-radius: 4px;
+
+        h2 {
+            font-size: 24px;
+            font-family: g-b;
+            margin-bottom: 16px;
+        }
+        p {
+            font-size: 16px;
+            color: #cecece;
+        }
+        .subcategory-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #0E131B;
+            padding: 12px 16px;
+            border-radius: 3px;
+            margin-bottom: 8px;
+            span {
+                font-size: 16px;
+            }
+            button {
+                background: #333A45;
+                padding: 8px 16px;
+                border-radius: 3px;
+                cursor: pointer;
+                transition: .2s;
+                &:hover {
+                    background: #fff;
+                    color: #0E131B;
+                }
+            }
+        }
+        > button {
+            background: #0B51B4;
+            padding: 8px 16px;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: .2s;
+
+            margin-top: 6px;
+            // margin-left: auto;
+            // display: block;
+            &:hover {
+                background: #fff;
+                color: #1B2028;
+            }
+        }
+        
+        .menu {
+            margin-top: 16px;
+            display: grid;
+            gap: 8px;
+            max-width: 350px;
+            input {
+                width: 100%;
+                padding: 10px 16px;
+                border-radius: 3px;
+                background: #333A45;
+                &::placeholder {
+                    color: #cecece;
+                }
+            }
+            button {
+                text-align: center;
+                background: #0B51B4;
+                padding: 10px 32px;
+                border-radius: 3px;
+                cursor: pointer;
+                transition: .2s;
+                &:hover {
+                    background: #fff;
+                    color: #1B2028;
+                }
+            }
+        }
+    }
+
+    .icon-selector-modal {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        background: #1b202885;
+        backdrop-filter: blur(4px);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 10;
+
+        .icon-selector-content {
+            padding: 32px;
+            background: #333A45;
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+
+            > div:first-child {
+                font-size: 18px;
+                text-align: center;
+            }
+
+            .icon-options {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 16px;
+                background: #0E131B;
+                padding: 16px;
+                border-radius: 4px;
+
+                .sel-ico {
+                    padding: 8px;
+                    border-radius: 3px;
+                    background: #1B2028;
+                    transition: .2s;
+                    cursor: pointer;
+                    &:hover {
+                        background: #485364;
+                    }
+                    img {
+                        width: 36px;
+                        height: 36px;
+                        object-fit: contain;
+                        border-radius: 3px;
+                    }
+                }
+            }
+
+            button {
+                border-radius: 4px;
+                text-align: center;
+                padding: 8px 16px;
+                background: #0B51B4;
+                cursor: pointer;
+                transition: .2s;
+                &:hover {
+                    color: #0E131B;
+                    background: #fff;
+                }
+            }
+        }
+    }
+    
+}
+
+.subcategory-success-modal {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background: #1b202885; // Полупрозрачный фон
+    backdrop-filter: blur(4px); // Размытие фона
+    display: none; // Скрыто по умолчанию
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+
+    &.active {
+        display: flex; // Для случаев, когда нужно показать через класс
+    }
+
+    .subcategory-success-content {
+        padding: 32px;
+        background: #333A45; // Основной фон модального окна
+        border-radius: 4px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        min-width: 300px;
+
+        > div:first-child {
+            font-size: 18px;
+            text-align: center;
+            color: #fff; // Белый текст для заголовка
+        }
+
+        .subcategory-info {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: #cecece; // Светло-серый для текста подкатегории
+
+            span {
+                font-family: g-b; // Если у тебя есть жирный шрифт
+            }
+        }
+
+        button {
+            border-radius: 4px;
+            text-align: center;
+            padding: 8px 16px;
+            background: #0B51B4; // Синий фон кнопки
+            cursor: pointer;
+            transition: .2s;
+            color: #fff;
+
+            &:hover {
+                background: #fff;
+                color: #0E131B; // Тёмный текст при наведении
+            }
+        }
+    }
+}
+.delete-confirm-modal {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background: #1b202885; // Полупрозрачный тёмный фон
+    backdrop-filter: blur(4px); // Размытие фона
+    display: none; // Скрыто по умолчанию
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+
+    .delete-confirm-content {
+        padding: 32px;
+        background: #333A45; // Тёмный фон окна
+        border-radius: 4px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        min-width: 300px;
+
+        > div:first-child {
+            font-size: 18px;
+            text-align: center;
+            color: #fff; // Белый текст заголовка
+        }
+
+        .warning {
+            font-size: 14px;
+            color: #ff4444; // Красный цвет для предупреждения
+            text-align: center;
+        }
+
+        .confirm-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+
+            button {
+                border-radius: 4px;
+                text-align: center;
+                padding: 8px 16px;
+                cursor: pointer;
+                transition: .2s;
+
+                &:first-child { // Кнопка "Да"
+                    background: #ff4444; // Красный фон
+                    color: #fff;
+                    &:hover {
+                        background: #cc3333; // Темнее при наведении
+                    }
+                }
+
+                &:last-child { // Кнопка "Нет"
+                    background: #0B51B4; // Синий фон
+                    color: #fff;
+                    &:hover {
+                        background: #fff;
+                        color: #0E131B; // Тёмный текст при наведении
+                    }
+                }
+            }
+        }
+    }
+    
+}
+
+.error-modal {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background: #1b202885; // Полупрозрачный тёмный фон
+    backdrop-filter: blur(4px); // Размытие фона
+    display: none; // Скрыто по умолчанию
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+
+    &.active {
+        display: flex; // Для случаев, когда нужно показать через класс
+    }
+
+    .error-content {
+        padding: 32px;
+        background: #333A45; // Тёмный фон окна
+        border-radius: 4px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        min-width: 300px;
+
+        > div:first-child {
+            font-size: 18px;
+            text-align: center;
+            color: #ff4444; // Красный цвет для заголовка ошибки
+            font-family: g-b; // Жирный шрифт, если есть
+        }
+
+        span#error-message {
+            font-size: 16px;
+            color: #cecece; // Светло-серый для текста ошибки
+            text-align: center;
+            line-height: 1.5; // Улучшает читаемость
+        }
+
+        button {
+            border-radius: 4px;
+            text-align: center;
+            padding: 8px 16px;
+            background: #0B51B4; // Синий фон кнопки
+            color: #fff;
+            cursor: pointer;
+            transition: .2s;
+
+            &:hover {
+                background: #fff;
+                color: #0E131B; // Тёмный текст при наведении
+            }
+        }
+    }
+
+    
+}

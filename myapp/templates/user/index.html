@@ -1,0 +1,163 @@
+{% extends 'base.html' %}
+
+{% block title %}Главная страница{% endblock %}
+
+<!-- {% block head %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+{% endblock %} -->
+
+{% block content %}
+    <section class="home-section">
+        <div class="content">
+
+
+            <section class="hero-banner">
+                
+                    <div class="images"><img src="{{ url_for('static', filename='images/components/banner.png') }}" alt=""></div>
+               
+            </section>
+
+            <section class="category-section__navigation">
+                <div class="category-content">
+                    {% if categories %}
+                        {% for category in categories %}
+                            <button class="category-item" onclick="window.location.href='{{ url_for('user.shops') }}?category_id={{ category.id }}'">
+                                <img src="{{ url_for('static', filename='uploads/category_icons/' + category.icon_path) if category.icon_path else url_for('static', filename='images/vector/default-icon.svg') }}" alt="{{ category.name }}" onerror="this.onerror=null; this.src='{{ url_for('static', filename='images/vector/default-icon.svg') }}'">
+                                <span>{{ category.name }}</span>
+                            </button>
+                        {% endfor %}
+                    {% else %}
+                        <p class="no-categories">Категории пока не созданы.</p>
+                    {% endif %}
+                </div>
+            </section>
+
+            {# --- СЕКЦИЯ НОВОСТЕЙ --- #}
+            <section class="main-page-section news-section"> {# Обертка для всей секции #}
+                <div class="section-header"> {# Заголовок и кнопка "Все новости" #}
+                    <h2>Последние новости</h2>
+                    <a href="{{ url_for('user.news_list') }}" class="button button-outline">Все новости</a>
+                </div>
+                <div class="news-section__navigation card-grid"> {# Сетка для карточек #}
+                    <!-- <div class="swiper mySwiperNews">
+                        <div class="swiper-wrapper"> -->
+                            {% if news_list %}
+                                {% for item in news_list %}
+                                    {# Включаем шаблон карточки новости #}
+                                    {% include 'components/news_card.html' %}
+                                {% endfor %}
+                            {% else %}
+                                <p class="no-items-message">Нет свежих новостей.</p>
+                            {% endif %}
+                        <!-- </div>
+                        <div class="hidden-arrow">
+                            <div class="swiper-button-next"></div>
+                            <div class="swiper-button-prev"></div>
+                        </div>
+                    </div> -->
+                </div>
+            </section>
+            {# --- КОНЕЦ СЕКЦИИ НОВОСТЕЙ --- #}
+
+            {# --- СЕКЦИЯ АКЦИЙ --- #}
+            <section class="main-page-section promo-section"> {# Обертка для всей секции #}
+                 <div class="section-header"> {# Заголовок и кнопка "Все акции" #}
+                    <h2>Акции</h2>
+                    {# Ссылка пока ведет на общую страницу новостей, можно добавить фильтр ?type=promo #}
+                    <a href="{{ url_for('user.news_list', type='promo') }}" class="button button-outline">Все акции</a>
+                 </div>
+                <div class="promt-section__navigation card-grid"> {# Используем тот же класс сетки #}
+                    <!-- <div class="swiper mySwiperPromt">
+                        <div class="swiper-wrapper">  -->
+                            {% if promo_list %}
+                                {% for item in promo_list %}
+                                    {# Включаем тот же шаблон карточки, он универсален #}
+                                    {% include 'components/news_card.html' %}
+                                {% endfor %}
+                            {% else %}
+                                <p class="no-items-message">Сейчас нет активных акций.</p>
+                            {% endif %}
+                        <!-- </div>  
+                        <div class="hidden-arrow">
+                            <div class="swiper-button-next"></div>
+                            <div class="swiper-button-prev"></div>
+                        </div>
+                    </div> -->
+                </div>
+            </section>
+
+            <!-- <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+            <script>
+                var swiper = new Swiper(".mySwiperPromt", {
+                        slidesPerView: 4,
+                        spaceBetween: 30,
+                        loop: true,
+                        pagination: {
+                        el: ".swiper-pagination",
+                        clickable: true,
+                        },
+                        navigation: {
+                        nextEl: ".swiper-button-next",
+                        prevEl: ".swiper-button-prev",
+                        },
+                    });
+                var swiper = new Swiper(".mySwiperNews", {
+                        slidesPerView: 4,
+                        spaceBetween: 30,
+                        loop: true,
+                        pagination: {
+                        el: ".swiper-pagination",
+                        clickable: true,
+                        },
+                        navigation: {
+                        nextEl: ".swiper-button-next",
+                        prevEl: ".swiper-button-prev",
+                        },
+                    });
+            </script> -->
+            {# --- КОНЕЦ СЕКЦИИ АКЦИЙ --- #}
+
+           
+
+            {% if current_floor_id %}
+                <div class="floor-info">
+                    <div class="floor-switcher">
+                        {% for floor_id, floor_data in maps.floors.items() %}
+                            {% if floor_id == current_floor_id %}
+                                <span class="active-floor">{{ floor_data.name }}</span>
+                            {% else %}
+                                <a href="{{ url_for('user.index', id=floor_id) }}" class="floor-link">{{ floor_data.name }}</a>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+                {% include 'components/map.html' %}
+            {% else %}
+                <div class="no-floors">
+                    <p>Этажи не созданы. Обратитесь к администратору для настройки.</p>
+                </div>
+            {% endif %}
+
+            <div class="additional-text">
+                <p>{{ content.get('paragraph1', '') }}</p>
+                <p>{{ content.get('paragraph2', '') }}</p>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        const shopData = {{ shops | tojson }};  // Передаём данные о магазинах для map.js
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const images = document.querySelectorAll('.category-item img');
+            images.forEach(img => {
+                img.onerror = () => {
+                    img.src = '{{ url_for('static', filename='images/vector/default-icon.svg') }}';
+                    img.onerror = null;
+                };
+            });
+        });
+    </script>
+{% endblock %}

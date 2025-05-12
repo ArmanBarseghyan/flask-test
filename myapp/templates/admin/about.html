@@ -1,0 +1,56 @@
+{# templates/admin/about.html #}
+{% extends 'base.html' %} {# Или ваш базовый админский шаблон #}
+
+{% block title %}Редактирование страницы "О нас"{% endblock %}
+
+{% block head %}
+    {{ super() }} {# Включаем содержимое блока head из base.html #}
+    {# Подключаем локальный CKEditor 4 В HEAD #}
+    <script src="{{ url_for('static', filename='ckeditor/ckeditor.js') }}"></script>  
+{% endblock %}
+
+{% block content %}
+<section class="admin-section">
+    <div class="content">
+        <h1>Редактирование страницы "О нас"</h1>
+
+        {# Вывод flash-сообщений (оставляем как есть) #}
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul class="flashes">
+                    {% for category, message in messages %}
+                        <li class="{{ category }}">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+
+        {# Форма (оставляем как есть) #}
+        <form id="about-form" method="POST" action="{{ url_for('admin.admin_about') }}">
+            <div class="form-group">
+                <label class="about-editor__label" for="about-editor">Содержимое страницы:</label>
+                <textarea id="about-editor" name="about_content" class="form-control" style="height: 400px;">{{ about_content_html | safe }}</textarea>
+            </div>
+            <div class="save-control">
+                <button type="submit" class="button button-success">Сохранить изменения</button>
+                <a href="{{ url_for('admin.edit') }}" class="button">Назад в админку</a>
+            </div>
+        </form>
+
+    </div>{# Конец .content #}
+</section>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }} {# Включаем содержимое блока scripts из base.html #}
+
+    {# Инициализируем CKEditor 4 (оставляем как есть) #}
+    {# СКРИПТ ЗАГРУЗКИ CKEDITOR.JS ОТСЮДА УБРАН #}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            CKEDITOR.replace('about-editor', {
+                height: 600
+            });
+        });
+    </script>
+{% endblock %}

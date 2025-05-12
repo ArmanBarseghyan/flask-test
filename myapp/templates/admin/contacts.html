@@ -1,0 +1,102 @@
+{# templates/admin/contacts.html - БЕЗ ИНЛАЙН СТИЛЕЙ #}
+
+{% extends 'base.html' %} {# Или твой админский базовый шаблон #}
+
+{% block title %}Контакты и Сообщения{% endblock %}
+
+{% block content %}
+<div class="admin-content-area content"> {# Используй этот класс для стилизации #}
+    
+    {# --- Форма редактирования контактной информации --- #}
+    <h1>Редактировать контактную информацию</h1>
+    <section class="admin-edit-content"> {# Используй этот класс для стилизации #}
+        <form method="POST" action="{{ url_for('admin.admin_contacts') }}">
+            {# CSRF токен добавится автоматически скриптом из base.html #}
+
+            {# Группа полей для Графика работы #}
+            <div class="duble">
+                <div class="form-group"> {# Пример класса для группы #}
+                    <label for="work_schedule_days">Дни работы:</label>
+                    <input type="text" id="work_schedule_days" name="work_schedule_days" value="{{ content.get('work_schedule_days', '') }}" placeholder="Например: пн-вс или пн-пт, сб">
+                </div>
+    
+                <div class="form-group">
+                    <label for="work_schedule_time">Время работы:</label>
+                    <input type="text" id="work_schedule_time" name="work_schedule_time" value="{{ content.get('work_schedule_time', '') }}" placeholder="Например: 10:00-22:00">
+                </div>
+            </div>
+
+             {# Группа полей для Телефона #}
+            <div class="duble">
+                <div class="form-group">
+                    <label for="contact_phone_display">Телефон (для отображения):</label>
+                    <input type="text" id="contact_phone_display" name="contact_phone_display" value="{{ content.get('contact_phone_display', '') }}" placeholder="Например: +7 (495) 123-45-67">
+                </div>
+    
+                <div class="form-group">
+                    <label for="contact_phone_raw">Телефон (для ссылки tel:):</label>
+                    <input type="text" id="contact_phone_raw" name="contact_phone_raw" value="{{ content.get('contact_phone_raw', '') }}" placeholder="Например: +74951234567">
+                </div>
+            </div>
+
+            {# Группа полей для Email #}
+            <div class="truble">
+                <div class="form-group">
+                    <label for="contact_email">Email:</label>
+                    <input type="email" id="contact_email" name="contact_email" value="{{ content.get('contact_email', '') }}" placeholder="info@example.com">
+                </div>
+    
+                 {# Группа полей для Адреса #}
+                <div class="form-group">
+                    <label for="contact_address_text">Адрес (текст):</label>
+                    <input type="text" id="contact_address_text" name="contact_address_text" value="{{ content.get('contact_address_text', '') }}" placeholder="Например: г. Москва, ул. Первая, д. 1">
+                </div>
+    
+                <div class="form-group">
+                    <label for="contact_address_url">Ссылка для адреса (URL):</label>
+                    <input type="url" id="contact_address_url" name="contact_address_url" value="{{ content.get('contact_address_url', '') }}" placeholder="Например: https://yandex.ru/maps/...">
+                </div>
+            </div>
+
+            <button type="submit" class="button-save">Сохранить контакты</button> {# Пример класса для кнопки #}
+        </form>
+    </section>
+    {# --- Конец формы редактирования --- #}
+
+
+    {# --- Таблица с полученными сообщениями --- #}
+    <section class="admin-messages-list"> {# Используй этот класс для стилизации #}
+        <h1>Полученные сообщения</h1>
+        {% if messages %}
+            <table class="messages-table"> {# Пример класса для таблицы #}
+                <thead>
+                    <tr>
+                        <th>Номер</th>
+                        <th>Имя</th>
+                        <th>Email</th>
+                        <th>Телефон</th>
+                        <th>Сообщение</th>
+                        <th>Дата</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for msg in messages %}
+                    <tr>
+                        <td>{{ msg.id }}</td>
+                        <td>{{ msg.name }}</td>
+                        <td>{{ msg.email }}</td>
+                        <td>{{ msg.phone }}</td>
+                        <td class="message-cell">{{ msg.message }}</td> {# Добавь стили для переноса текста #}
+                        <td>{{ msg.timestamp.strftime('%d.%m.%Y %H:%M:%S') }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p class="no-messages">Пока нет ни одного сообщения.</p>
+        {% endif %}
+    </section>
+    {# --- Конец таблицы --- #}
+
+</div>
+{% endblock %}

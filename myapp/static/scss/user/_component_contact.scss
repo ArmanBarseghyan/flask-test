@@ -1,0 +1,67 @@
+.component_contact{
+    margin-top: 32px;
+
+    .content{
+        position: relative;
+        overflow: hidden;
+        padding: 42px 64px 64px;
+
+        background: #1B2028;
+        border-radius: 8px;
+        
+        display: flex;
+        gap: 120px;
+        @media only screen and (max-width: 1000px) {
+            padding: 42px;
+            gap: 80px;
+        }
+        @media only screen and (max-width: 767px) {
+            flex-direction: column;
+            gap: 32px;
+        }
+        @media only screen and (max-width: 477px) {
+            padding: 32px 24px 24px;
+        }
+    }
+
+    .item{
+        display: flex;
+        flex-direction: column;
+
+        gap: 16px;
+
+        h6{
+            font-size: 24px;
+            position: relative;
+            z-index: 2;
+            font-family: g-b;
+        }
+
+        .text-box, .text-link_box{
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+
+            color: #cecece;
+            position: relative;
+            z-index: 2;
+        }
+    }
+
+    .ct-fon_vector{
+        position: absolute;
+        right: 16px;
+        top: 0;
+
+        transform: scale(0.9);
+        z-index: 1;
+        @media only screen and (max-width: 767px) {
+            height: 250px;
+        }
+        @media only screen and (max-width: 477px) {
+            opacity: 0.7;
+            top: 40px;
+            height: 180px;
+        }
+    }
+}

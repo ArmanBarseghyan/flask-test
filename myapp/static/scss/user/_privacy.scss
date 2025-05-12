@@ -1,0 +1,50 @@
+.privacy-section ul {
+    list-style: none;
+    padding-left: 20px;
+}
+
+.privacy-section li {
+    margin: 10px 0;
+}
+
+.privacy-section strong {
+    color: #ffffff;
+}
+
+.privacy-section{
+    margin-top: 64px;
+    @media  only screen and (max-width: 767px) {
+        margin-top: 32px;   
+    }
+    h1{
+        font-size: 32px;
+        font-family: g-b;
+        @media  only screen and (max-width: 767px) {
+            font-size: 24px;
+        }
+    }
+    
+    h2{
+        font-family: g-b;
+        font-size: 26px;
+        @media  only screen and (max-width: 767px) {
+            font-size: 20px;
+        }
+    }
+
+    p{
+        color: #dce0ea;
+        a{
+            text-decoration: underline;
+        }
+    }
+    .grid{
+        margin-top: 24px;
+        display: grid;
+        gap: 16px;
+        @media  only screen and (max-width: 767px) {
+            margin-top: 16px;
+            gap: 12px;
+        }
+    }
+}

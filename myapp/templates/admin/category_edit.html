@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+
+{% block title %}Редактирование категории {{ category.name }}{% endblock %}
+
+{% block content %}
+<section class="category-detail-section category-section__admin">
+    <div class="content">
+        <h1>Редактирование категории: 
+            <span>
+                <div class="icon-preview">
+                    <img src="{{ url_for('static', filename='uploads/category_icons/' + category.icon_path) if category.icon_path else url_for('static', filename='images/vector/default-icon.svg') }}" alt="{{ category.name }}" style="max-width: 100px;">
+                </div>
+                {{ category.name }}
+            </span>
+        </h1>
+        
+        <a class="back-button" href="{{ url_for('admin.admin_category') }}"><button>Назад к списку категорий</button></a>
+
+        <div class="form-control">
+            <form method="POST" id="category-form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="form-group">
+                    <label for="category_name">Название категории:</label>
+                    <input type="text" id="category_name" name="category_name" value="{{ category.name }}">
+                </div>
+                <div class="form-group">
+                    <label>Иконка:</label>
+                    <div class="icon-preview">
+                        <img src="{{ url_for('static', filename='uploads/category_icons/' + category.icon_path) if category.icon_path else url_for('static', filename='images/vector/default-icon.svg') }}" alt="{{ category.name }}" style="max-width: 100px;">
+                    </div>
+                    <button type="button" onclick="showIconSelector()">Изменить иконку</button>
+                    <input type="hidden" name="category_icon" id="category_icon" value="{{ category.icon_path if category.icon_path else 'default' }}">
+                </div>
+                <!-- Блок для цвета подсветки -->
+                <div class="form-group palitra-group">
+                    <label for="category_color">Цвет подсветки категории:</label>
+                    <input type="text" id="category_color" name="category_color" value="{{ category.color if category.color else '#FF5733' }}" placeholder="#FF5733" pattern="#[0-9A-Fa-f]{6}" title="Введите цвет в формате #HEX (например, #FF5733)">
+                    <!-- Скрытый input для выбора цвета -->
+                    <input type="color" id="color-picker" style="position: absolute; opacity: 0; pointer-events: none;">
+                    <div class="color-preview">
+                        <span>Текущий цвет категории: </span>
+                        <div class="duble">
+                            <div class="color-box" style="background-color: {{ category.color if category.color else '#FF5733' }};" onclick="openColorPicker()"></div>
+                            <span>{{ category.color if category.color else '#FF5733' }}</span>
+                        </div>
+                    </div>
+                    <div class="palitra"></div>
+                </div>
+                <button type="submit" class="save-update_category" name="action" value="update_category">Сохранить изменения</button>
+                <button type="button" class="category_del" onclick="showDeleteConfirmModal()">Удалить категорию</button>
+            </form>
+        </div>
+
+        <!-- Список подкатегорий -->
+        <div class="subcategory-list">
+            <h2>Подкатегории</h2>
+            {% if subcategories %}
+                {% for subcategory in subcategories %}
+                    <div class="subcategory-item">
+                        <span>{{ subcategory.name }}</span>
+                        <button onclick="deleteSubcategory({{ subcategory.id }})">Удалить</button>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>Подкатегорий нет.</p>
+            {% endif %}
+            <button class="create-subcategory-menu__button" onclick="toggleCreateSubcategory()">Добавить подкатегорию</button>
+            <div class="menu" id="create-subcategory-menu" style="display: none;">
+                <input type="text" id="new-subcategory-name" placeholder="Название подкатегории">
+                <button onclick="saveNewSubcategory({{ category.id }})">Сохранить</button>
+            </div>
+        </div>
+
+        <!-- Модальное окно для выбора иконок -->
+        <div class="icon-selector-modal" id="icon-selector-modal" style="display: none;">
+            <div class="icon-selector-content">
+                <div>Выберите иконку для категории</div>
+                <div class="icon-options">
+                    <div class="sel-ico" onclick="selectIcon('child.svg')">
+                        <img src="{{ url_for('static', filename='uploads/category_icons/child.svg') }}" alt="Детские товары">
+                    </div>
+                    <div class="sel-ico" onclick="selectIcon('food.svg')">
+                        <img src="{{ url_for('static', filename='uploads/category_icons/food.svg') }}" alt="Еда">
+                    </div>
+                    <div class="sel-ico" onclick="selectIcon('razvlechenie.svg')">
+                        <img src="{{ url_for('static', filename='uploads/category_icons/razvlechenie.svg') }}" alt="Развлечения">
+                    </div>
+                    <div class="sel-ico" onclick="selectIcon('services.svg')">
+                        <img src="{{ url_for('static', filename='uploads/category_icons/services.svg') }}" alt="Услуги">
+                    </div>
+                    <div class="sel-ico" onclick="selectIcon('shop.svg')">
+                        <img src="{{ url_for('static', filename='uploads/category_icons/shop.svg') }}" alt="Магазин">
+                    </div>
+                </div>
+                <button onclick="closeIconSelector()">Закрыть</button>
+            </div>
+        </div>
+
+        <!-- Подключаем модальные окна -->
+        {% include 'components/modals.html' %}
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/category_detail.js') }}"></script>
+<script>
+    // Открытие палитры при клике на color-box
+    function openColorPicker() {
+        const colorPicker = document.getElementById('color-picker');
+        const palitra = document.querySelector('.palitra');
+        
+        // Программно открываем палитру
+        colorPicker.click();
+    }
+
+    // Обновление цвета при выборе из палитры
+    document.getElementById('color-picker').addEventListener('input', function() {
+        const color = this.value;
+        const colorInput = document.getElementById('category_color');
+        const colorBox = document.querySelector('.color-box');
+        const colorText = document.querySelector('.color-preview span');
+
+        colorInput.value = color; // Обновляем текстовое поле
+        colorBox.style.backgroundColor = color; // Обновляем превью
+        colorText.textContent = color; // Обновляем текст
+    });
+
+    // Динамическое обновление цвета при ручном вводе
+    document.getElementById('category_color').addEventListener('input', function() {
+        const color = this.value;
+        const colorBox = document.querySelector('.color-box');
+        const colorText = document.querySelector('.color-preview span');
+        if (/^#[0-9A-Fa-f]{6}$/.test(color)) {
+            colorBox.style.backgroundColor = color;
+            colorText.textContent = color;
+            document.getElementById('color-picker').value = color; // Синхронизируем с палитрой
+        }
+    });
+</script>
+{% endblock %}

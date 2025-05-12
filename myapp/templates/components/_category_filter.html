@@ -1,0 +1,24 @@
+<!-- templates/_category_filter.html -->
+<div class="category-section">
+    <div class="category-filter">
+        <button class="category_link" onclick="displaySubcategories(this, null); filterShops(null, null);">
+            <img src="{{ url_for('static', filename='images/vector/allvec.svg') }}" alt="allvect">
+            <span>Показать все</span>
+        </button>
+        {# Пустой div после кнопки "Показать все", чтобы было куда кликать для скрытия #}
+        <!-- <div class="subcategory-placeholder" data-category-id="null"></div> -->
+
+        {% for category in categories %}
+        <div class="category-item-wrapper"> {# Обертка для кнопки и плейсхолдера #}
+            <button class="category_link" data-category-id="{{ category.id }}" onclick="displaySubcategories(this, {{ category.id }}); filterShops({{ category.id }}, null);">
+                {% if category.icon_path %}
+                    <img src="{{ url_for('static', filename='uploads/category_icons/' + category.icon_path) }}" alt="{{ category.name }}">
+                {% endif %}
+                <span>{{ category.name }}</span>
+            </button>
+            {# Место для подкатегорий этой конкретной категории #}
+            <div class="subcategory-placeholder" data-category-id="{{ category.id }}"></div>
+        </div>
+        {% endfor %}
+    </div>
+</div>

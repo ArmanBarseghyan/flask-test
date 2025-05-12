@@ -1,0 +1,21 @@
+{# templates/user/about.html #}
+{% extends 'base.html' %}
+
+{% block title %}О нас{% endblock %}
+
+{% block content %}
+<section class="about-page-content"> {# Добавим класс для возможной стилизации #}
+    <div class="content"> {# Используем стандартный контейнер .content #}
+        <div class="images"><img src="{{ url_for('static', filename='images/components/banner.png') }}" alt=""></div>
+        <h1>О нас</h1>
+
+        {# Отображаем HTML контент, переданный из app.py.
+           Фильтр |safe ОБЯЗАТЕЛЕН, чтобы теги рендерились, а не экранировались.
+           Мы доверяем этому контенту, т.к. он вводится администратором. #}
+        <div class="editable-content"> {# Обертка для контента #}
+            {{ about_html | safe }}
+        </div>
+
+    </div> {# Конец .content #}
+</section>
+{% endblock %}

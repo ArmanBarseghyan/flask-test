@@ -1,0 +1,204 @@
+// static/scss/_news_list_user.scss
+
+$primary-color: #0B51B4;
+$secondary-text-color: #CECECE; // Цвет текста как в shop-item
+$accent-color: #FD4242; // Акцентный цвет из shop-section
+$card-bg: #1B2028; // Фон карточки как в shop-item
+$card-border-radius: 4px; // Радиус скругления как в shop-item
+$grid-gap: 16px; // Отступ между элементами сетки
+$title-font-family: 'g-b', sans-serif; // Предполагаемый шрифт заголовков
+
+.news-list-section {
+  margin-top: 64px; // Отступ сверху как в shop-section
+
+  .content {
+    h1 {
+      font-family: $title-font-family;
+      font-size: 32px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: $secondary-text-color; // Цвет заголовка
+      margin-bottom: 30px;
+
+      span {
+        color: $accent-color; // Акцентный цвет для спана в заголовке
+      }
+    }
+
+    .flashes {
+      list-style: none;
+      padding: 0;
+      margin-bottom: 20px;
+
+      li {
+        padding: 12px 16px;
+        border-radius: $card-border-radius;
+        margin-bottom: 8px;
+        color: #fff;
+
+        &.success { background-color: #28a745; }
+        &.error { background-color: #d61f1f; } // Используем похожий красный цвет
+        &.warning { background-color: #ffc107; color: #212529; }
+        &.info { background-color: #17a2b8; }
+      }
+    }
+
+    .news-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: $grid-gap;
+      row-gap: 24px; // Добавим row-gap
+      margin-top: 32px; // Отступ сверху как в shop-grid
+    }
+
+    .news-card {
+      background: $card-bg;
+      border-radius: $card-border-radius;
+      // padding: 12px 10px;
+      display: grid;
+      gap: 12px;
+      font-family: $title-font-family; // Используем шрифт заголовков
+
+      .news-card-banner {
+        border-top-left-radius: $card-border-radius;
+        border-top-right-radius: $card-border-radius;
+        overflow: hidden;
+        height: 190px; // Фиксированная высота как у shop-image
+
+        a {
+          display: block;
+          height: 100%; // Занимаем всю высоту родителя
+        }
+
+        img {
+          display: block;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+      }
+
+      .news-card-icon {
+        text-align: center;
+        padding: 20px;
+
+        a {
+          display: block;
+        }
+
+        img {
+          max-width: 80px;
+          max-height: 80px;
+          border-radius: 50%;
+          object-fit: cover;
+          border: 1px solid #333A45; // Похожий цвет рамки
+        }
+
+        .no-icon {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 80px;
+          height: 80px;
+          border-radius: 50%;
+          background-color: #333A45; // Похожий цвет фона
+          font-size: 2em;
+          color: $secondary-text-color;
+        }
+      }
+
+      .news-card-content {
+        display: grid;
+        gap: 8px;
+        padding: 12px 12px 24px;
+
+        .news-card-type {
+          .badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 3px;
+            color: white;
+            font-size: 0.8em;
+            margin-right: 5px;
+
+            &.badge-info { background-color: #17a2b8; }
+            &.badge-success { background-color: #28a745; }
+          }
+        }
+
+        .news-card-title {
+          h3 {
+            font-size: 15px; // Размер шрифта как в shop-item h6
+            line-height: 1.3;
+
+            a {
+              text-decoration: none;
+              color: $secondary-text-color; // Цвет заголовка
+              &:hover {
+                color: #fff; // Цвет при наведении
+              }
+            }
+          }
+        }
+
+        .news-card-description {
+          color: $secondary-text-color;
+          font-size: 14px; // Размер шрифта как в category__data
+          line-height: 1.5;
+        }
+      }
+
+      .news-card-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 14px; // Размер шрифта как в shop-footer button
+        color: $secondary-text-color;
+        padding-top: 10px;
+
+        // .news-card-date {
+        //   // Стили для даты
+        // }
+
+        .news-card-more {
+          a {
+            cursor: pointer;
+            padding: 6px 16px;
+            background: #333A45; // Цвет кнопки как в shop-footer
+            border-radius: 3px;
+            font-size: 15px;
+            color: $secondary-text-color;
+            text-decoration: none;
+
+            &:hover {
+              background: #fff; // Цвет при наведении
+              color: #333A45;
+            }
+          }
+        }
+      }
+
+      // Если нет баннера, показываем иконку по центру
+      &:not(:has(.news-card-banner)) {
+        .news-card-icon {
+          grid-column: 1 / -1; // Занимаем всю ширину карточки
+        }
+        .news-card-content {
+          grid-column: 1 / -1;
+        }
+        .news-card-footer {
+          grid-column: 1 / -1;
+        }
+      }
+    }
+   
+    .no-news-message {
+      text-align: center;
+      padding: 30px;
+      font-size: 1.1em;
+      color: $secondary-text-color;
+      // width: 100%;
+    }
+  }
+}

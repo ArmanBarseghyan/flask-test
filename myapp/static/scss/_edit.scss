@@ -1,0 +1,310 @@
+.edit-section{
+    background: #0E131B;
+ 
+    h1{
+        font-size: 32px;
+        font-family: g-b;
+    }
+}
+
+// .map-loader__section{
+//     display: flex;
+//     justify-content: start;
+// }
+.map-loader-form{
+    margin-top: 42px;
+
+    .edit-name-map__content{
+        display: flex;
+        gap: 8px;
+        margin-top: 18px;
+    }
+    
+    .name-etaje-edit{
+        font-size: 18px;
+        display: block;
+    }
+
+    .cont-duble{
+        margin-top: 12px;
+
+        display: flex;
+        gap: 8px;
+        input{
+            padding: 0 0px 0 12px;
+            border-radius: 3px;
+            background: #333A45;
+        }
+        button{background: #333A45;border: 1px solid #333A45;}
+        
+        
+    }
+
+}
+
+
+.etaje-name{
+    margin-top: 42px;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    font-family: g-b;
+    span{
+        transition: .3s;
+        background: #0B51B4;
+        color: #fff;
+        font-size: 16px;
+        line-height: 16px;
+        padding: 8px 24px;
+        border-radius: 3px;
+    }
+}
+
+
+
+.floor-switcher{
+    margin-top: 24px;
+    transition: .3s;
+
+    &.__shema{
+        margin-top: 32px;
+        margin-bottom: -24px;
+    }
+    display: flex;
+    gap: 8px;
+    *{
+        text-decoration: none;
+        border-radius: 3px;
+        font-size: 16px;
+    }
+    a, span, button{
+        padding: 10px 32px;
+    }
+    a, button{
+        color: #fff;
+        text-align: center;
+        
+        background: #333A45;
+        
+        transition: .3s;
+        &:hover{
+            background: #396cb4;
+            transition: .3s;
+        }
+        cursor: pointer;
+    }
+    span{
+       
+        transition: .3s;
+        background: #0B51B4;
+        color: #fff;
+    }
+}
+
+.etaje-add__button{
+    button{
+        background: #333A45;
+        outline: unset;
+        border: unset;
+        color: #fff;
+        font-size: 24px;
+        line-height: 16px;
+        padding: 12px 16px;
+        cursor: pointer;
+        &:hover{
+            background: #0B51B4;
+        }
+    }
+}
+.map-container{
+    margin-top: 42px;
+    background: #1B2028;
+
+    display: flex;
+    justify-content: center;
+}
+
+
+.map-file_load-item{
+    display: flex;
+    justify-self: start;
+}
+#map_file{
+    opacity: 0;
+    pointer-events: visible;
+    position: absolute;
+    z-index: -100;
+}
+
+.map-file_class, .map-delete__item, .save-change_button{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    background: #0B51B4;
+    font-size: 16px;
+    color: #fff;
+    padding: 12px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    border: 1px solid #0B51B4;
+    img{
+        height: 24px;
+        object-fit: contain;
+    }
+    &:hover{
+        background: unset;
+        border: 1px solid #fff;
+    }
+}
+.map-delete__item{
+    border: 1px solid #ae2323;
+    background: #ae2323;
+    img{height: 20px;}
+
+}
+
+
+
+.save-change_button{
+    &.download{
+        background: #333A45;
+        border: 1px solid #333A45;
+    }
+    &.save-reload{
+        background: #087e08;
+        border: 1px solid #087e08;
+    }
+}
+
+.floor-actions{
+    margin-top: 8px;
+    display: flex;
+    gap: 8px;
+}
+ .select-main, .etaje-full_del, .clear-all-maps{
+    background: #d19e1b;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+
+    padding: 8px 18px;
+    
+    border-radius: 3px;
+    border: 1px solid #d19e1b;
+    img{
+        width: 24px;
+        object-fit: contain;
+    }
+    transition: .2s;
+    &:hover{
+        transition: .2s;
+        background: transparent;
+    }
+    &:disabled{
+        opacity: 0.6;
+        cursor: default;
+    }
+ }
+
+ .etaje-full_del, .clear-all-maps{
+    background: #ae2323;
+    border: 1px solid #ae2323;
+    &:hover{
+        background: transparent;
+
+    }
+ }
+
+
+
+ .no-loadMap{
+    height: 500px;
+    object-fit: contain;
+    border-radius: 8px;
+ }
+
+
+//  #file-info{
+//     position: fixed;
+//     top: 0;
+//     left: 0;
+//  }
+
+.flashes {
+    position: fixed;
+    display: grid;
+    gap: 8px;
+    left: 16px;
+    top: 16px;
+
+    li {
+        margin-top: auto;
+        padding: 12px 32px;
+        color: #fff;
+        width: 100%;
+        transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out; // Добавляем transition для transform и opacity
+        border-radius: 6px;
+        cursor: pointer; // Добавляем курсор, чтобы показать, что элемент кликабельный
+
+        &.error {
+            background: #ae232360;
+        }
+
+        &.success {
+            background: #087e0860;
+        }
+
+        &.hidden { // Добавляем класс для скрытия элемента
+            transform: translateX(100%); // Сдвигаем элемент вправо за пределы экрана
+            opacity: 0; // Делаем элемент прозрачным
+        }
+    }
+}
+#file-info{
+    margin-left: 8px;
+    position: relative;
+    > span{
+        position: absolute;
+        color: #5b6678;  
+        font-size: 14px;
+      }
+
+      .select-load-file{
+          padding: 8px 16px;
+          background: #1B2028;
+          border-radius: 4px;
+          display: flex;
+          align-items: center;
+          span{
+            text-overflow: ellipsis;
+            width: 140px;
+            overflow: hidden;
+                white-space: nowrap;
+              padding: 8px 12px;
+              background: #6c7789;
+              margin-left: 6px;
+              border-radius: 3px;
+          }
+      }
+}
+
+.map-file_load-item__background{
+    margin-top: 64px;
+    background: #1B2028;
+    padding: 12px 16px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    input{
+        display: none;
+    }
+    img{
+        height: 24px;
+        object-fit: contain;
+    }
+}

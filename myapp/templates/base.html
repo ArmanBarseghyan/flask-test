@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ТЦ Измайловский - Шопинг в Москве у метро Измайловская</title>
+    <meta name="description" content="ТЦ Измайловский приглашает за шопингом у метро Измайловская. Товары среднего ценового сегмента, люкс и демократичные бренды. Акции и скидки круглый год!">
+    <meta name="keywords" content="ТЦ Измайловский, шопинг Москва, метро Измайловская, магазины, акции, скидки, люкс бренды">
+    <meta name="robots" content="base, follow">
+    <meta name="author" content="ТЦ Измайловский">
+
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="ТЦ Измайловский - Шопинг у метро Измайловская">
+    <meta property="og:description" content="Посетите ТЦ Измайловский для шопинга в Москве! Товары среднего ценового сегмента, люкс и демократичные бренды с акциями и скидками.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://izmaylovskiy.ru/">
+    <meta property="og:image" content="https://izmaylovskiy.ru/static/images/og-image.jpg">
+    <meta property="og:site_name" content="ТЦ Измайловский">
+    <meta property="og:locale" content="ru_RU">
+
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="ТЦ Измайловский - Шопинг у метро Измайловская">
+    <meta name="twitter:description" content="ТЦ Измайловский: шопинг в Москве у метро Измайловская. Люкс, средний сегмент и демократичные бренды с акциями!">
+    <meta name="twitter:image" content="https://izmaylovskiy.ru/static/images/og-image.jpg">
+
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/reset.css') }}">
+
+    <!-- Добавляем CSRF-токен в мета-тег -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    {% block head %}{% endblock %}
+</head>
+<body>
+    {% include 'components/header.html' %}
+
+    
+       
+    {% block content %}{% endblock %}
+       
+    
+
+    {% include 'components/footer.html' %}
+
+    <!-- Скрипт для автоматического добавления CSRF-токена в формы -->
+    <script>
+        // Автоматически добавляем CSRF-токен во все формы
+        document.addEventListener('DOMContentLoaded', function() {
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+            const forms = document.querySelectorAll('form');
+
+            forms.forEach(form => {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'csrf_token';
+                input.value = csrfToken;
+                form.appendChild(input);
+            });
+        });
+
+        // Функция для использования CSRF-токена в AJAX-запросах
+        function getCsrfToken() {
+            return document.querySelector('meta[name="csrf-token"]').content;
+        }
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+        const flashes = document.querySelector('.flashes');
+
+        if (flashes) {
+            flashes.addEventListener('click', function(event) {
+                const target = event.target;
+
+                if (target.tagName === 'LI') {
+                    target.classList.add('hidden'); // Добавляем класс 'hidden' для запуска анимации
+
+                    // Удаляем элемент после завершения анимации
+                    setTimeout(() => {
+                        target.remove();
+                    }, 300); // 300мс - это продолжительность анимации (как в transition)
+                }
+            });
+        }
+    });
+    </script>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>

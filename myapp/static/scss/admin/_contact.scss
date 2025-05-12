@@ -1,0 +1,141 @@
+/* static/css/admin_contacts.scss */
+
+.admin-content-area {
+    padding: 32px;
+    margin-top: 32px;
+    background: #1B2028;
+    color: #cecece;
+    border-radius: 10px;
+    h1 {
+        font-size: 24px;
+        font-family: g-b;
+        margin-bottom: 32px;
+        color: #fff;
+    }
+
+    .admin-edit-content {
+        background: #333A45;
+        padding: 32px;
+        border-radius: 8px;
+        margin-bottom: 40px;
+
+        h2 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+
+            label {
+                display: block;
+                font-size: 16px;
+                margin-bottom: 8px;
+            }
+
+            input[type="text"],
+            input[type="email"],
+            input[type="url"] {
+                width: 100%;
+                padding: 16px;
+                border-radius: 4px;
+                background: #0E131B;
+                color: #fff;
+                border: none;
+
+                &::placeholder {
+                    color: #697386;
+                }
+            }
+
+            button[type="submit"] {
+                background: #0B51B4;
+                padding: 10px 32px;
+                border-radius: 4px;
+                cursor: pointer;
+                transition: .2s;
+                color: #fff;
+                font-family: g-b;
+
+                &:hover {
+                    background: #fff;
+                    color: #1B2028;
+                }
+            }
+        }
+    }
+
+
+    .no-messages {
+        margin-top: 20px;
+        text-align: center;
+    }
+
+    .admin-messages-list {
+        background: #1B2028;
+        border-radius: 8px;
+    
+        h1 {
+            font-size: 24px;
+            font-family: g-b;
+            margin-bottom: 32px;
+            color: #fff;
+        }
+    
+        .messages-table {
+            width: 100%;
+            border-collapse: collapse;
+    
+            thead {
+                tr {
+                    background: #0E131B;
+                    color: #cecece;
+                }
+            }
+    
+            th,
+            td {
+                border: 1px solid #1B2028;
+                padding: 12px;
+                text-align: left;
+            }
+    
+            tbody {
+                tr {
+                    background: #333A45;
+    
+                    &:nth-child(even) {
+                        background: #1B2028;
+                    }
+                }
+            }
+    
+            .message-cell {
+                white-space: pre-wrap;
+                word-break: break-word;
+            }
+        }
+    
+        .no-messages {
+            margin-top: 20px;
+            text-align: center;
+        }
+    }
+
+
+    .button-save{
+        text-align: center;
+    }
+    .duble, .truble{
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+    }
+    .truble{
+        grid-template-columns: 1fr 1fr 1fr;
+        
+    }
+}

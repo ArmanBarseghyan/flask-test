@@ -1,0 +1,283 @@
+{% extends 'base.html' %}
+
+{% block title %}Управление магазинами{% endblock %}
+
+{% block content %}
+<section class="shop-section shop-section__admin">
+    <div class="content">
+        <div class="duble">
+            <h1>
+                Магазины
+                <span class="count-shop__data">[{{ shop_count }}]</span>
+            </h1>
+
+            <div class="duble">
+                <a href="{{ url_for('admin.admin_category') }}">
+                    <button class="category_link">Категории</button>
+                </a>
+                <form method="POST" action="{{ url_for('admin.clear_shops') }}" onsubmit="return confirm('Вы уверены, что хотите удалить все магазины?');">
+                    <button class="clear-all-shops" type="submit">Очистить базу магазинов</button>
+                </form>
+                <form method="POST" action="{{ url_for('admin.refresh_shops') }}" onsubmit="return confirm('Вы уверены, что хотите обновить список магазинов? Это перезапустит парсинг SVG-карт.');">
+                    <button class="refresh-shops" type="submit">
+                        Обновить список магазинов
+                    </button>
+                </form>
+            </div>
+        </div>
+        <!-- Статический блок подкатегорий УДАЛЕН -->
+
+        <div class="shop-grid">
+            <!-- Фильтр по категориям -->
+            <div class="filter-show__section">
+                <div class="filter-head">
+                    <div class="filter-show__btn">
+                        <span>Фильтр</span>
+                    </div>
+                </div>
+                
+                <div class="filter-show__content">
+                    <div class="filter-close">Закрыть</div>
+                    {% include 'components/_category_filter.html' with context %}
+                </div>
+            </div>
+
+            <!-- Список магазинов -->
+            <div class="grid">
+                {% if shops %}
+                    {% for shop in shops %}
+                        <div class="shop-item">
+                            <div class="shop-image shop-image__data">
+                                <img src="{{ shop.shop_logo }}" alt="shop" onerror="this.onerror=null; this.src='{{ url_for('static', filename='images/vector/static-logo.svg') }}'"> {# Добавлен onerror #}
+                            </div>
+                            <div class="shop-header">
+                                <div class="category__data">
+                                    {% if shop.category_icon %}
+                                        <img src="{{ shop.category_icon }}" alt="{{ shop.category if shop.category else 'Пусто' }}">
+                                    {% endif %}
+                                    {{ shop.category if shop.category else 'Пусто' }}
+                                </div>
+                                <div class="right-data">
+                                    <div class="shop-floor__data">ID: {{ shop.id }}</div>
+                                    <div class="shop-floor__data">{{ shop.floor_name }}</div>
+                                </div>
+                            </div>
+                            <div class="shop-footer">
+                                <h6 class="shop-name__data">{{ shop.shop_name }}</h6>
+                                <a href="{{ url_for('user.shop_detail', shop_id=shop.id) }}">
+                                    <button>Перейти</button>
+                                </a>
+                                <a class="edit-shop-btn__control" href="{{ url_for('admin.admin_shop_detail', shop_id=shop.id) }}">
+                                    <button class="edit-shop-btn">Редактировать <img src="{{ url_for('static', filename='images/vector/editIcoWhite.svg') }}" alt="edit"></button>
+                                </a>
+                                <form method="POST" action="{{ url_for('admin.delete_shop', shop_id=shop.id) }}" style="display:inline;" onsubmit="return confirm('Вы уверены, что хотите удалить этот магазин?');">
+                                    <button class="delete-shop-btn" type="submit">Удалить <img src="{{ url_for('static', filename='images/vector/Trash2.svg') }}" alt="trash"></button>
+                                </form>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="no-shops" style="text-align: center; color: #CECECE; padding: 20px;">
+                        <p>Магазины не найдены. Попробуйте изменить фильтры.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+    {# Вставляем ТОТ ЖЕ САМЫЙ новый JavaScript, что и для user/shops.html #}
+    <script>
+        let selectedCategoryIdForFilter = null; // Для URL фильтрации
+        let selectedSubcategoryIds = [];       // Для URL фильтрации
+        let categoriesDataCache = null;       // Кэш для данных категорий
+
+        // --- Инициализация при загрузке ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            selectedCategoryIdForFilter = urlParams.get('category_id');
+            selectedSubcategoryIds = urlParams.get('subcategory_ids') ? urlParams.get('subcategory_ids').split(',') : [];
+
+            // Предзагрузка категорий для ускорения отображения подкатегорий
+            fetchCategories().then(() => {
+                // Если категория была выбрана при загрузке, покажем ее подкатегории
+                if (selectedCategoryIdForFilter) {
+                    const selectedButton = document.querySelector(`.category_link[data-category-id="${selectedCategoryIdForFilter}"]`);
+                    if (selectedButton) {
+                        // Не вызываем filterShops здесь, т.к. страница уже загружена с нужным фильтром
+                        displaySubcategories(selectedButton, selectedCategoryIdForFilter, true); // true = не очищать другие
+                    }
+                }
+            });
+
+             // Добавляем класс 'active' к выбранной категории при загрузке
+             if (selectedCategoryIdForFilter) {
+                const activeButton = document.querySelector(`.category_link[data-category-id="${selectedCategoryIdForFilter}"]`);
+                if (activeButton) {
+                    activeButton.classList.add('active');
+                }
+            } else {
+                 const showAllButton = document.querySelector('.category_filter .category_link:not([data-category-id])'); // Кнопка "Показать все"
+                 if (showAllButton) {
+                     showAllButton.classList.add('active');
+                 }
+            }
+        });
+
+        // --- Функция для загрузки и кэширования категорий ---
+        async function fetchCategories() {
+            if (categoriesDataCache) {
+                return categoriesDataCache;
+            }
+            try {
+                // Определяем, какой URL использовать (для админки или пользователя)
+                const isAdminPage = window.location.pathname.startsWith('/admin/shops');
+                const url = isAdminPage ? '/admin/get_categories' : '/get_categories';
+                const response = await fetch(url);
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                const data = await response.json();
+                categoriesDataCache = data.categories || [];
+                return categoriesDataCache;
+            } catch (error) {
+                console.error('Ошибка загрузки категорий:', error);
+                categoriesDataCache = []; // Предотвращаем повторные ошибки
+                return [];
+            }
+        }
+
+        // --- Функция для отображения/скрытия подкатегорий ---
+        async function displaySubcategories(clickedButton, categoryId, isInitialLoad = false) {
+            // Сначала убираем класс 'active' со всех кнопок категорий
+             document.querySelectorAll('.category_filter .category_link.active').forEach(btn => btn.classList.remove('active'));
+            // Добавляем класс 'active' к нажатой кнопке
+            if (clickedButton) {
+                 clickedButton.classList.add('active');
+            }
+
+
+            // Удаляем все ранее созданные контейнеры подкатегорий, если это не первоначальная загрузка
+            if (!isInitialLoad) {
+                 document.querySelectorAll('.subcategory-container-dynamic').forEach(container => container.remove());
+            }
+
+            // Если нажали "Показать все" (categoryId is null) или у категории нет подкатегорий, просто выходим
+            if (categoryId === null) {
+                return;
+            }
+
+            // Получаем данные категорий (из кэша или загружаем)
+            const categories = await fetchCategories();
+            const category = categories.find(c => c.id == categoryId); // Используем == для сравнения строки и числа
+
+            if (!category || !category.subcategories || category.subcategories.length === 0) {
+                 // Можно опционально добавить сообщение "Нет подкатегорий"
+                const placeholder = document.querySelector(`.subcategory-placeholder[data-category-id="${categoryId}"]`);
+                 if (placeholder) {
+                    placeholder.innerHTML = '<div class="subcategory-container-dynamic no-subcategories-message">Нет подкатегорий</div>'; // Добавляем сообщение
+                 }
+                return; // Нет подкатегорий для отображения
+            }
+
+            // Находим плейсхолдер для этой категории
+            const placeholder = document.querySelector(`.subcategory-placeholder[data-category-id="${categoryId}"]`);
+            if (!placeholder) {
+                console.warn(`Плейсхолдер для категории ${categoryId} не найден.`);
+                return;
+            }
+
+            // Создаем контейнер для подкатегорий
+            const subcategoryContainer = document.createElement('div');
+            subcategoryContainer.className = 'subcategory-container-dynamic'; // Класс для легкого удаления
+
+            // Заполняем контейнер кнопками подкатегорий
+            category.subcategories.forEach(sub => {
+                const isSelected = selectedSubcategoryIds.includes(String(sub.id));
+                const button = document.createElement('button');
+                // Добавляем те же классы, что и у категорий + 'active', если выбрана
+                button.className = 'category_link subcategory_link ' + (isSelected ? 'active' : '');
+                button.dataset.subcategoryId = sub.id;
+                button.innerHTML = `
+                    <span>${sub.name}</span>
+                    <img src="${isSelected ? '{{ url_for('static', filename='images/vector/checked.svg') }}' : '{{ url_for('static', filename='images/vector/uncheck.svg') }}'}" alt="${isSelected ? 'Снять выбор' : 'Выбрать'}">
+                `;
+                // При клике на подкатегорию вызываем toggleSubcategory
+                button.onclick = (event) => {
+                     event.stopPropagation(); // Предотвращаем всплытие до родительской кнопки категории
+                     toggleSubcategory(sub.id);
+                };
+                subcategoryContainer.appendChild(button);
+            });
+
+            // Очищаем плейсхолдер и вставляем новый контейнер
+            placeholder.innerHTML = '';
+            placeholder.appendChild(subcategoryContainer);
+        }
+
+         // --- Функция для установки фильтра категории (вызывается из HTML) ---
+        function filterShops(categoryId, subcategoryIds) {
+            // Устанавливаем ID категории для фильтрации
+             selectedCategoryIdForFilter = categoryId !== null ? String(categoryId) : null;
+            // Если выбрали новую категорию, сбрасываем выбранные подкатегории
+             if (subcategoryIds === null) {
+                selectedSubcategoryIds = [];
+            } else {
+                 selectedSubcategoryIds = subcategoryIds || [];
+             }
+             // Обновляем URL и перезагружаем страницу
+             updateShopsList();
+        }
+
+
+        // --- Функция для переключения выбора подкатегории ---
+        function toggleSubcategory(subId) {
+            const subIdStr = String(subId);
+            const index = selectedSubcategoryIds.indexOf(subIdStr);
+            if (index === -1) {
+                selectedSubcategoryIds.push(subIdStr);
+            } else {
+                selectedSubcategoryIds.splice(index, 1);
+            }
+            // После изменения подкатегорий - обновляем URL и перезагружаем
+            updateShopsList();
+        }
+
+        // --- Функция для обновления URL и перезагрузки страницы ---
+        function updateShopsList() {
+            const url = new URL(window.location.href);
+            if (selectedCategoryIdForFilter) {
+                url.searchParams.set('category_id', selectedCategoryIdForFilter);
+            } else {
+                url.searchParams.delete('category_id');
+            }
+            if (selectedSubcategoryIds.length > 0) {
+                url.searchParams.set('subcategory_ids', selectedSubcategoryIds.join(','));
+            } else {
+                url.searchParams.delete('subcategory_ids');
+            }
+            // Перезагружаем страницу с новыми параметрами
+            window.location.href = url.toString();
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            const filterSection = document.querySelector('.filter-show__section');
+            const filterBtn = document.querySelector('.filter-show__btn');
+            const filterClose = document.querySelector('.filter-close');
+
+            // Проверяем URL при загрузке
+            if (window.location.search.includes('category')) {
+                filterSection.classList.add('__open');
+            }
+
+            filterBtn.addEventListener('click', () => {
+                // Если клик по кнопке - всегда тогглим, игнорируя проверку URL
+                filterSection.classList.toggle('__open');
+            });
+
+            filterClose.addEventListener('click', () => {
+                // Если клик по закрытию - всегда убираем, игнорируя проверку URL
+                filterSection.classList.remove('__open');
+            });
+        });
+    </script>
+{% endblock %}

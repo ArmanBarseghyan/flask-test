@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+
+{% block title %}Редактирование карты{% endblock %}
+
+{% block content %}
+<section class="edit-section">
+    <div class="content">
+        <h1>Схема торгового центра</h1>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul class="flashes">
+                    {% for category, message in messages %}
+                        <li class="{{ category }}">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+
+        <h2 class="etaje-name">Текущий этаж: <span>{{ maps.floors[current_floor_id].name }}</span></h2>
+
+        <div class="floor-switcher">
+            {% for floor_id, floor_info in maps.floors.items() %}
+                {% if floor_id == current_floor_id %}
+                    <span>{{ floor_info.name }}</span>
+                {% else %}
+                    <form action="{{ url_for('admin.edit_floor', floor_id=floor_id) }}" method="post" style="display: inline;">
+                        {# CSRF токен добавится автоматически из base.html, если настроено #}
+                        {# Или добавь вручную: <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"> #}
+                        <button type="submit" class="floor-link-button">{{ floor_info.name }}</button> {# Стилизуй кнопку как ссылку #}
+                    </form>
+                {% endif %}
+            {% endfor %}
+            <form class="etaje-add__button" action="{{ url_for('admin.add_floor') }}" method="post" style="display: inline;">
+                <button type="submit">+</button>
+            </form>
+        </div>
+
+        <!-- Кнопки "Сделать основным" и "Удалить" -->
+        <div class="floor-actions">
+            {% if current_floor_id != maps['current_floor']['id'] %}
+                <form action="{{ url_for('admin.set_default_floor', floor_id=current_floor_id) }}" method="post" style="display: inline;">
+                    <button class="select-main" type="submit">Сделать основным<img src="{{ url_for('static', filename='images/vector/main-component-svgrepo-com 1.svg') }}"></button>
+                </form>
+            {% endif %}
+
+            {% if current_floor_id != first_floor_id %}
+                <form action="{{ url_for('admin.delete_floor', floor_id=current_floor_id) }}" method="post" style="display: inline;">
+                    <button class="etaje-full_del" type="submit" onclick="return confirm('Вы уверены?')">Удалить этаж<img src="{{ url_for('static', filename='images/vector/Trash2.svg') }}" alt="loadvector"></button>
+                </form>
+            {% else %}
+                <button class="etaje-full_del" disabled>Удалить этаж<img src="{{ url_for('static', filename='images/vector/Trash2.svg') }}" alt="loadvector"></button>
+            {% endif %}
+            <form method="POST" action="{{ url_for('admin.clear_uploads') }}" onsubmit="return confirm('Вы уверены, что хотите удалить все загруженные карты?');">
+                <button class="clear-all-maps" type="submit">Очистить все карты <img src="{{ url_for('static', filename='images/vector/Trash2.svg') }}" alt="trash"></button>
+            </form>
+        </div>
+
+        <form class="map-loader-form" method="POST" action="{{ url_for('admin.edit') }}" enctype="multipart/form-data">
+            <div class="edit-name-map__item">
+                <label class="name-etaje-edit">Редактировать название этажа</label>
+                <div class="cont-duble">
+                    <input type="text" name="floor_name" value="{{ maps.floors[current_floor_id].name }}">
+                    <button class="save-change_button" type="submit">Сохранить</button>
+                </div>
+            </div>
+            <div class="edit-name-map__content">
+                <div class="map-file_load-item">
+                    <label class="map-file_class" for="map_file">Загрузить карту <img src="{{ url_for('static', filename='images/vector/export-svgrepo-com.svg') }}" alt="loadvector"> </label>
+                    <div id="file-info"></div>
+                    <input type="file" name="map_file" id="map_file" accept=".svg">
+                </div>
+                <!-- Новая кнопка для загрузки фона -->
+                <button class="save-change_button save-reload" type="submit">Сохранить/Обновить<img src="{{ url_for('static', filename='images/vector/refreshSave.svg') }}" alt="loadvector"></button>
+
+                <a class="save-change_button download {% if not maps.floors[current_floor_id].filename %} _disabled{% endif %}"
+                href="{{ url_for('admin.download_map', floor_id=current_floor_id) }}"
+                {% if maps.floors[current_floor_id].filename %} download="{{ maps.floors[current_floor_id].filename }}"{% endif %}>
+                Скачать карту <img src="{{ url_for('static', filename='images/vector/import-2-svgrepo-com.svg') }}" alt="loadvector">
+            </a>
+            <!-- Кнопка удаления карты -->
+            <button class="map-delete__item" type="submit" formaction="{{ url_for('admin.delete_map', floor_id=current_floor_id) }}" onclick="return confirm('Вы уверены, что хотите удалить карту?')">
+                Удалить карту <img src="{{ url_for('static', filename='images/vector/Trash2.svg') }}" alt="loadvector">
+            </button>
+            </div>
+
+
+            <div class="map-file_load-item__background">
+                <label class="map-file_class" for="background_file">[Загрузить ФОН] <img src="{{ url_for('static', filename='images/vector/export-svgrepo-com.svg') }}" alt="loadvector"> </label>
+                <div id="background-file-info"></div>
+                <input type="file" name="background_file" id="background_file" accept="image/*">
+            </div>  
+        </form>
+
+        {% include 'components/map.html' %}
+    </div>
+</section>
+
+<script>
+    const shopData = {{ shops | tojson }}; // Передаем данные о магазинах
+
+    document.getElementById('map_file').addEventListener('change', function(event) {
+        const fileInfo = document.getElementById('file-info');
+        if (event.target.files.length > 0) {
+            fileInfo.innerHTML = `<div class='select-load-file'> Выбран файл: <span>${event.target.files[0].name}</span></div> <span>Не забудьте сохранить изменения! </span>`;
+        } else {
+            fileInfo.innerHTML = '';
+        }
+    });
+
+    // Добавляем обработчик для фонового изображения
+    document.getElementById('background_file').addEventListener('change', function(event) {
+        const backgroundFileInfo = document.getElementById('background-file-info');
+        if (event.target.files.length > 0) {
+            backgroundFileInfo.innerHTML = `<div class='select-load-file'> Выбран фон: <span>${event.target.files[0].name}</span></div> <span>Не забудьте сохранить изменения! </span>`;
+        } else {
+            backgroundFileInfo.innerHTML = '';
+        }
+    });
+</script>
+<script src="{{ url_for('static', filename='js/map.js') }}"></script>
+
+{% endblock %}

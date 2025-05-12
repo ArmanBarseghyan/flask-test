@@ -1,0 +1,68 @@
+<section class="map-section">
+    <!-- <div class="content"> -->
+        <div class="map-container">
+            <!-- Лоадер -->
+
+            <div id="map-loader" class="map-loader">
+                <div class="progress-container">
+                    <div id="progress-bar" class="progress-bar"></div>
+                </div>
+                <div id="progress-text" class="progress-text">0%</div>
+                <div id="progress-info" class="progress-info">Подготовка карты...</div>
+            </div>
+            {% if maps.floors[current_floor_id].filename %}
+                <div class="svg-container">
+                    <object id="floor-map" data="{{ url_for('static', filename='uploads/files/' + maps.floors[current_floor_id].filename) }}?t={{ timestamp }}" type="image/svg+xml">
+                        <img src="{{ url_for('static', filename='fallback.png') }}" alt="Карта этажа {{ current_floor_id }}">
+                    </object>
+                </div>
+            {% else %}
+                <img class="no-loadMap" src="{{ url_for('static', filename='images/vector/mapnoload.svg.png') }}" alt="Карта не загружена">
+            {% endif %}
+        </div>
+    <!-- </div>  -->
+</section>
+
+<!-- Попап -->
+<div id="shop-popup" class="shop-popup" style="display: none;">
+    <div class="popup-content">
+        <span id="popup-close" class="popup-close">Закрыть</span>
+        <div class="header-popup">
+            <div class="banner-web"><img src="" alt="" class="banner"></div>
+            <div class="popup-logo__control">
+                <img id="popup-logo" src="" alt="Логотип магазина" class="popup-logo">
+            </div>
+        </div>
+        <div class="grid">
+            <div class="popup-block-1">
+                <p id="category-row">
+                    <span id="popup-category">
+                        <img id="category-icon" src="" alt="" style="display: none;">
+                        <span id="category-text"></span>
+                    </span>
+                </p>
+                <p id="subcategories-row"><span id="popup-subcategories"></span></p>
+                <h3 id="popup-name"></h3>
+                <p id="popup-description"></p>
+            </div>
+            <div class="popup-block-2">
+                <p><img src="{{ url_for('static', filename='images/vector/Clock.svg') }}" alt=""> <span id="popup-worktime"></span></p>
+                <p id="website-row"><img src="{{ url_for('static', filename='images/vector/Globe.svg') }}" alt=""> <a id="popup-website" href="" target="_blank"></a></p>
+            </div>
+            <a id="shop-page-link" href="" class="shop-page-button"><button>Подробнее о магазине</button></a>
+        </div>
+        {% if session['username'] %}
+        <div class="admin-edit_popup">
+            <div class="link-pavelion">
+                <a href="" id="pavilion-link" target="_blank">Редактировать павильон</a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Передаем maps_data в JavaScript -->
+<script id="maps-data" type="application/json">
+    {{ maps | tojson }}
+</script>
+<script src="{{ url_for('static', filename='js/map.js') }}"></script>

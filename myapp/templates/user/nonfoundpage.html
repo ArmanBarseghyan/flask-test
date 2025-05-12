@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Страница не найдена{% endblock %}
+
+{% block content %}
+    <section class="not-found-section">
+        <div class="content">
+            <div class="notfound">
+                <img src="{{ url_for('static', filename='images/vector/notfound.svg') }}" alt="notfound">
+            </div>
+            <p>Страница не найдена. Приносим извинения за возможные неудобства.</p>
+            <div class="recon">
+                <a href="{{ url_for('user.index') }}">На главную</a>
+            </div>
+        </div>
+    </section>
+{% endblock %}

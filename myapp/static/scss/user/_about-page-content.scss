@@ -1,0 +1,68 @@
+.about-page-content{
+    margin-top: 64px;
+    @media only screen and (max-width: 767px) {
+        margin-top: 32px;
+    }
+    h1{
+        font-size: 32px;
+        font-family: g-b;
+        @media only screen and (max-width: 767px) {
+            font-size: 24px;
+        }
+    }
+    .editable-content{
+        margin-top: 32px;
+        @media only screen and (max-width: 767px) {
+            margin-top: 16px;
+        }
+        strong{
+            font-family: g-b;
+        }
+    }
+    .images{
+        height: 350px;
+        margin: 32px 0;
+        @media only screen and (max-width: 767px) {
+            height: 100%;
+        }
+        img{
+            width: 100%;
+            display: flex;
+            object-fit: cover;
+            object-position: 0% 50%;
+        }
+        overflow: hidden;
+        border-radius: 8px;
+    }
+}
+
+.about-editor__label{
+    margin-bottom: 24px;
+    display: block;
+}
+#about-form{    
+    margin: 32px 0;
+    .save-control{
+        margin-top: 32px;
+
+        display: flex;
+        gap: 16px;
+        button, a{
+            padding: 12px 32px;
+            background: #0B51B4;
+            transition: .2s;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 4px;
+            &:hover{
+                transition: .2s;
+                color: #1B2028;
+                background: #fff;
+            }
+        }
+
+        a{
+            background: #333A45;
+        }
+    }
+}

@@ -1,0 +1,177 @@
+{% extends 'base.html' %}
+
+{% block title %}Магазин {{ shop.id }}{% endblock %}
+
+{% block content %}
+<section class="shop-detail-section">
+    <div class="content">
+        <!-- Кнопка "Назад" -->
+        <a class="back-button" href="{{ url_for('user.shops') }}"><button>Назад к магазинам</button></a>
+
+        <!-- Навигация -->
+        <div class="sub-navigation">
+            <div class="">Главная</div>
+            <div class="">Магазины</div>
+            <div class="">{{ shop.shop_name }}</div>
+        </div>
+
+        <!-- Основной блок магазина -->
+        <div class="grid">
+            <div class="shop-left__block">
+                <!-- Название магазина -->
+                <div class="shop-name">{{ shop.shop_name }}</div>
+
+                <!-- Логотип магазина -->
+                <div class="shop-image__logo">
+                    <img src="{{ shop.shop_logo }}" alt="{{ shop.shop_name }}"
+                         onerror="this.onerror=null; this.src='{{ url_for('static', filename='images/vector/static-logo.svg') }}'">
+                </div>
+
+                <!-- Информация о магазине -->
+                <div class="category__data">
+                    {% if shop.subcategories %}
+                        {% for subcategory in shop.subcategories %}
+                            <span class="subcategory-item">{{ subcategory }}</span>{% if not loop.last %} {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        Без подкатегорий
+                    {% endif %}
+                </div>
+                <div class="shop-info-block">
+                    
+                    <div class="duble">
+                        <div class="category-with-icon">
+                            {% if shop.category_icon %}
+                                <img src="{{ shop.category_icon }}" alt="{{ shop.category if shop.category else 'Без категории' }}">
+                            {% endif %}
+                            <span>{{ shop.category if shop.category else 'Без категории' }}</span>
+                        </div>
+                        <!-- Этаж -->
+                        <span>{{ shop.floor_name }}</span>
+                    </div>
+
+                    <!-- Время работы -->
+                    <div class="work-time">
+                        <img src="{{ url_for('static', filename='images/vector/Clock.svg') }}" alt="clock">
+                        <p>{{ shop.work_time }}</p>
+                    </div>
+
+                    <!-- Ссылка на сайт -->
+                    {% if shop.web_url and shop.web_url.strip() %}
+                    <div class="web-link">
+                        <img src="{{ url_for('static', filename='images/vector/Globe.svg') }}" alt="web">
+                        <a href="{{ shop.web_url }}" target="_blank">{{ shop.web_text }}</a>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Кнопка "Открыть расположение" -->
+                <button class="button-coordination" data-shop-id="{{ shop.id }}" data-floor-id="{{ shop.floor_id }}" onclick="openLocation('{{ shop.id }}', '{{ shop.floor_id }}')">Открыть расположение</button>
+            </div>
+
+            <!-- Описание магазина -->
+            <div class="shop-description__block">
+                {% if shop.descriptions %}
+                    {% for desc in shop.descriptions %}
+                        <p>{{ desc }}</p>
+                    {% endfor %}
+                {% else %}
+                    <p>Описание отсутствует.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Галерея магазина -->
+        <div class="gallery-box">
+            {% if shop.gallery_images %}
+                {% for image in shop.gallery_images %}
+                    <div class="image">
+                        <img src="{{ image }}" alt="gallery" onclick="openLightbox('{{ image }}')">
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>Галерея пуста</p>
+            {% endif %}
+        </div>
+
+                <!-- МЕСТО ДЛЯ НОВОСТЕЙ МАЗИНА-->
+                <div class="shop-detail-news__section"> {# Обертка для секции новостей #}
+                    <h2>Новости и акции магазина</h2> {# Заголовок секции #}
+                    <div class="shop-detail-news__content"> {# Контейнер для карточек #}
+                        {% if related_news %}
+                            {% for news_item in related_news %}
+                            <div class="news-card shop-news-card"> {# Карточка новости #}
+                                <a href="{{ url_for('user.user_news_detail', news_id=news_item.id) }}" class="news-card-link">
+                                    {# Изображение-баннер новости (если есть) #}
+                                    {% if news_item.banner_url %}
+                                    <div class="news-card-image">
+                                        <img src="{{ news_item.banner_url }}" alt="{{ news_item.title }}">
+                                    </div>
+                                    {% else %}
+                                    {# Можно добавить заглушку, если баннера нет #}
+                                    <div class="news-card-image placeholder">
+                                        {# <img src="{{ url_for('static', filename='images/placeholder.png') }}" alt="Нет изображения"> #}
+                                    </div>
+                                    {% endif %}
+        
+                                    <div class="news-card-body">
+                                        {# Тип новости/акции #}
+                                        <span class="news-card-type badge {% if news_item.type == 'promo' %}badge-success{% else %}badge-info{% endif %}">
+                                            {% if news_item.type == 'promo' %}Акция{% else %}Новость{% endif %}
+                                        </span>
+                                        {# Заголовок новости #}
+                                        <h3 class="news-card-title">{{ news_item.title }}</h3>
+                                        {# Дата публикации #}
+                                        <p class="news-card-date">
+                                            {{ news_item.published_at.strftime('%d.%m.%Y') if news_item.published_at else 'Дата не указана' }}
+                                        </p>
+                                    </div>
+                                </a>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <p class="no-news-message">У этого магазина пока нет новостей или акций.</p> {# Сообщение, если новостей нет #}
+                        {% endif %}
+                    </div>
+                </div>
+                {# --- КОНЕЦ СЕКЦИИ НОВОСТЕЙ --- #}
+        
+            </div> {# Конец .content #}
+        </section>
+
+    </div>
+</section>
+
+<!-- Lightbox для просмотра изображений -->
+<div id="lightbox" class="lightbox" onclick="closeLightbox()">
+    <span class="close">×</span>
+    <img id="lightbox-image" src="" alt="Увеличенное изображение">
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function openLightbox(imageSrc) {
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImage = document.getElementById('lightbox-image');
+        lightboxImage.src = imageSrc;
+        lightbox.style.display = 'flex';
+        document.body.style.overflow = 'hidden'; // Отключаем прокрутку
+    }
+
+    function closeLightbox() {
+        const lightbox = document.getElementById('lightbox');
+        lightbox.style.display = 'none';
+        document.body.style.overflow = 'auto';  // Включаем прокрутку обратно
+    }
+
+    // Функция для перенаправления на схему с подсветкой магазина
+    function openLocation(shopId, floorId) {
+        const url = new URL(window.location.origin + '{{ url_for('user.shema') }}');
+        url.searchParams.set('id', floorId);
+        url.searchParams.set('highlight_shop', shopId);
+        console.log('Redirecting to:', url.toString()); // Для отладки
+        window.location.href = url.toString();
+    }
+</script>
+{% endblock %}

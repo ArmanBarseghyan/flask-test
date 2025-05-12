@@ -1,0 +1,349 @@
+// static/scss/_news_detail.scss
+
+// Стили для секции редактирования/создания новости
+// Используем классы .news-edit-section или .news-create-section
+.news-edit-section,
+.news-create-section {
+  margin-top: 64px;
+
+  h1 {
+    font-size: 32px;
+    font-family: g-b; // Жирный шрифт
+    margin-bottom: 8px;
+  }
+
+  // Стиль для отображения типа (Новость/Акция) под заголовком
+  h1 + p em {
+    font-size: 16px;
+    color: #adb5bd; // Приглушенный цвет
+    font-style: italic;
+    display: block;
+    margin-bottom: 24px;
+  }
+
+  // Контейнер редактора (основной блок)
+  #news-content-editor {
+    background: #1B2028; // Темный фон как у блоков
+    padding: 24px; // Увеличим отступы
+    border-radius: 4px;
+    border: 1px solid #333A45; // Рамка
+
+    h2 { // Заголовок "Редактор контента"
+      font-size: 24px;
+      font-family: g-b;
+      margin-bottom: 20px;
+      color: #fff; // Белый цвет
+      border-bottom: 1px solid #333A45; // Разделитель
+      padding-bottom: 10px;
+    }
+
+    // Стили для групп полей формы (отступы и т.д.)
+    .form-group {
+      margin-bottom: 20px; // Увеличим отступ между полями
+
+      label {
+        font-size: 15px; // Чуть меньше
+        display: block;
+        margin-bottom: 8px;
+        color: #cecece; // Светло-серый
+      }
+
+      // Стили для input и textarea
+      .form-control {
+        padding: 10px 16px;
+        border-radius: 3px;
+        background: #333A45; // Темно-серый фон поля
+        border: 1px solid #495057; // Рамка чуть светлее фона
+        color: #fff; // Белый текст
+        width: 100%;
+        max-width: 500px; // Ограничим ширину полей
+        font-size: 14px;
+        transition: border-color 0.2s, box-shadow 0.2s;
+        box-sizing: border-box; // Добавлено для правильного расчета ширины
+
+        &:focus {
+          outline: none;
+          border-color: #0B51B4; // Синяя рамка при фокусе
+          box-shadow: 0 0 0 2px rgba(11, 81, 180, 0.25); // Легкая тень
+        }
+
+        &::placeholder {
+        
+          color: #8a919b; // Цвет плейсхолдера
+        }
+      }
+
+      textarea.form-control {
+        min-height: 80px; // Минимальная высота для textarea
+        resize: vertical; // Разрешаем менять высоту
+      }
+
+      // Стили для select (иконка)
+      select.form-control {
+        appearance: none; // Убираем стандартный вид
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23adb5bd' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e"); // Своя стрелка
+        background-repeat: no-repeat;
+        background-position: right 0.75rem center;
+        background-size: 16px 12px;
+        padding-right: 2.5rem; // Место для стрелки
+        cursor: pointer;
+      }
+
+      // Превью иконки
+      #icon-preview {
+        margin-top: 10px;
+        min-height: 50px; // Чтобы контейнер не схлопывался
+        img {
+          border-radius: 4px;
+          background-color: #495057; // Фон под превью
+          padding: 2px;
+          max-width: 50px;
+          max-height: 50px;
+          vertical-align: middle;
+        }
+      }
+      // Ссылка "Управление иконками"
+      small a {
+        color: #0B51B4;
+        text-decoration: none;
+        font-size: 0.85em;
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+
+    // Стили для чекбокса "Опубликовано"
+    .form-check {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 20px; // Добавим отступ снизу
+
+      .form-check-input {
+        width: auto; // Убираем 100% ширину
+        max-width: none;
+        cursor: pointer;
+      }
+      .form-check-label {
+        margin-bottom: 0; // Убираем нижний отступ у label
+        color: #fff;
+        cursor: pointer;
+      }
+    }
+
+
+    // Разделители <hr>
+    hr {
+      border: none;
+      border-top: 1px solid #333A45; // Темный разделитель
+      margin: 25px 0; // Отступы сверху/снизу
+    }
+
+    h3 { // Заголовок "Блоки контента"
+      font-size: 20px;
+      font-family: g-b;
+      margin-bottom: 15px;
+      color: #fff;
+    }
+
+    // Контейнер для блоков контента
+    #content-blocks-container {
+      display: flex;
+      flex-direction: column;
+      gap: 15px; // Отступ между блоками
+
+      // Стили для отдельного блока контента
+      .content-block-item {
+        background: #0E131B; // Очень темный фон блока
+        padding: 15px;
+        border-radius: 4px;
+        border: 1px solid #333A45;
+
+        .block-inner-content { // Обертка для самого контента блока
+          margin-bottom: 10px; // Отступ до кнопок управления
+          .block-type-label { // Метка типа блока "[text]"
+            font-size: 0.8em;
+            color: #6c757d;
+            margin-right: 8px;
+            font-weight: bold;
+            text-transform: uppercase;
+            display: inline-block; // Или block, если нужно над полем
+            margin-bottom: 5px;
+          }
+          // Общие стили для полей ввода внутри блоков
+          .block-input {
+            width: 100%;
+            max-width: 100%; // Занимают всю ширину блока
+            margin-top: 5px;
+            padding: 10px 16px; // Добавим padding для единообразия
+            border-radius: 3px;
+            background: #333A45;
+            border: 1px solid #495057;
+            color: #fff;
+            box-sizing: border-box;
+            font-size: 14px;
+
+            &:focus {
+              outline: none;
+              border-color: #0B51B4;
+              box-shadow: 0 0 0 2px rgba(11, 81, 180, 0.25);
+            }
+            &::placeholder {
+              color: #8a919b;
+            }
+          }
+          // Стили для полей картинки
+          .block-image-input { // input[type=file]
+            font-size: 0.9em;
+            color: #adb5bd;
+            &::file-selector-button { // Стилизуем кнопку выбора файла
+              padding: 6px 12px;
+              margin-right: 10px;
+              border-radius: 3px;
+              background: #333A45;
+              border: 1px solid #495057;
+              color: #fff;
+              cursor: pointer;
+              transition: background-color .2s;
+              &:hover {
+                background-color: #495057;
+              }
+            }
+          }
+          .image-preview-container img {
+            border: 1px solid #333A45;
+            border-radius: 3px;
+            background-color: #333A45;
+            max-width: 100%; // Картинка не должна выходить за границы блока
+            height: auto;
+            display: block; // Убираем лишнее пространство снизу
+            margin-bottom: 10px;
+          }
+          .change-image-btn { // Кнопка "Заменить"
+            font-size: 11px;
+            padding: 3px 8px;
+            background-color: #495057;
+            color: #fff;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: background-color .2s;
+            &:hover { background-color: #5a6268; }
+          }
+          .image-upload-status {
+            font-size: 0.85em;
+            color: #adb5bd;
+            margin-top: 5px;
+            display: block;
+          }
+
+          // Стили для списка
+          .block-list-ul {
+            margin-top: 8px;
+            padding-left: 25px; // Отступ для маркеров
+            li {
+              margin-bottom: 8px;
+              &:last-child { margin-bottom: 0;}
+            }
+            .block-list-item-input {
+              max-width: 90%; // Чуть уже, чтобы красиво смотрелось
+              @extend .block-input; // Наследуем общие стили полей
+            }
+          }
+          .button-add-list-item {
+            margin-top: 8px;
+            font-size: 11px;
+            padding: 3px 8px;
+            background-color: #495057;
+            color: #fff;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: background-color .2s;
+            &:hover { background-color: #5a6268; }
+          }
+        }
+
+        // Контейнер для кнопок управления блоком
+        .block-controls {
+          text-align: right; // Кнопки справа
+          border-top: 1px dashed #333A45; // Пунктирный разделитель
+          padding-top: 10px;
+          margin-top: 10px; // Отступ от контента
+          .button { // Общие стили для кнопок управления
+            margin-left: 5px;
+            i { margin-right: 3px; } // Если используешь иконки
+            border: none;
+            cursor: pointer;
+            transition: background-color .2s, color .2s;
+          }
+          // Стили как в таблице новостей
+          .button-sm { padding: 5px 10px; font-size: 12px; line-height: 1.5; border-radius: 3px; }
+          .button-danger { color: #fff; background-color: #cc3333; border-color: #cc3333; &:hover{ background-color: #b12929; border-color: #a52828; color:#fff;}}
+          .button-move-up-block, .button-move-down-block { // Кнопки перемещения
+            background-color: #495057;
+            border-color: #495057;
+            color: #fff;
+            &:hover { background-color: #5a6268; border-color: #545b62; }
+          }
+        }
+      }
+    }
+
+    // Контейнер для кнопок "Добавить..."
+    #add-block-buttons {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid #333A45; // Сплошной разделитель
+      display: flex; // Кнопки в ряд
+      flex-wrap: wrap; // Перенос на новую строку, если не влезают
+      gap: 10px; // Отступ между кнопками
+
+      .button { // Общие стили для кнопок добавления
+        background: #495057;
+        color: #fff;
+        border: none;
+        border-radius: 3px;
+        padding: 8px 16px;
+        cursor: pointer;
+        transition: background-color .2s;
+        text-decoration: none;
+        &:hover { background-color: #5a6268; }
+
+        // &.button-secondary { // Дополнительный класс, если нужен
+        //   // Может использоваться для стилизации определенных кнопок добавления
+        // }
+      }
+    }
+
+    // Финальные кнопки формы (Сохранить/Отмена)
+    div[style*="margin-top: 20px;"] { // Находим блок по стилю (лучше добавить класс, но пока так)
+      text-align: right; // Кнопки справа
+      margin-top: 30px !important; // Увеличим отступ сверху
+      .button {
+        margin-left: 10px;
+        padding: 10px 32px; // Крупные кнопки
+        border-radius: 3px;
+        cursor: pointer;
+        transition: background-color .2s, color .2s;
+        text-decoration: none;
+        border: none;
+      }
+      .button-success { // Кнопка Сохранить
+        background: #087e08;
+        border-color: #087e08;
+        color: #fff;
+        &:hover{ background-color: #065c06; border-color: #054c05; }
+      }
+      // Кнопка/ссылка Отмена (или Назад к списку)
+      .button:not(.button-success) {
+        background: #6c757d;
+        border-color: #6c757d;
+        color: #fff;
+        &:hover{ background-color: #5a6268; border-color: #545b62; }
+      }
+    }
+
+  } // Конец .content (если у вас есть такой класс-обертка)
+} // Конец .news-edit-section

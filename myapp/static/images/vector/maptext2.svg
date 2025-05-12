@@ -1,0 +1,32 @@
+<svg width="980" height="525" viewBox="0 0 980 525" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_103_1458)">
+  <g>
+  <defs>
+    <style>
+      /*  Стили для hover внутри SVG  */
+      .my-link:hover path {
+        fill: red;
+      }
+      /* Можно добавить стили и для image, если нужно */
+      .my-link:hover image {
+         /*  Например, изменить прозрачность */
+         opacity: 0.8;
+      }
+    </style>
+    <!-- ... определения clipPath, если есть ... -->
+  </defs>
+    <a href="index.html" class="my-link">  <!-- Добавляем класс -->
+      <image href="../play.svg" x="476.163" y="418.169" width="100" height="50" />
+      <path d="M428.343 471.076C428.343 471.076 621.5 480 655.233 471.076C688.965 462.151 702 386 702 386H761.5V525H655.233H428.343V471.076Z" fill="#404957" />
+    </a>
+  </g>
+<rect x="808" y="443" width="172" height="82" fill="#404957"/>
+<path d="M763.97 382.576L702 382.576V-0.565601L988 -1V439.848H804.95V525H763.97V382.576Z" fill="#404957"/>
+<rect x="476.163" y="418.169" width="40.6977" height="24.4186" fill="#404957"/>
+<rect x="321.512" y="312.355" width="22.3837" height="28.4884" fill="#404957"/>
+<rect x="321.512" y="278.779" width="22.3837" height="28.4884" fill="#404957"/>
+<rect x="321.512" y="246.221" width="22.3837" height="28.4884" fill="#404957"/>
+
+</g>
+
+</svg>

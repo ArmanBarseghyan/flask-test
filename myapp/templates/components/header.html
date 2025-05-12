@@ -1,0 +1,179 @@
+<header>
+    <!-- Пользовательский контент -->
+    <section class="user-content">
+        <div class="content">
+            <nav class="header-order__content">
+                <ul>
+                    <li><a href="{{ url_for('user.shema') }}">Схема этажей</a></li>
+                    <li><a href="{{ url_for('user.how_to_get') }}">Как добраться</a></li>
+                </ul>
+            </nav>
+            <ul class="header-order__info">
+                <li>10:00-22:00</li>
+                <li><a href="tel:+7 (495) 228-95-20">+7 (495) 228-95-20</a></li>
+            </ul>
+        </div>
+
+        <div class="content">
+            <div class="logo">
+                <a href="{{ url_for('user.index') }}">
+                    <img src="{{ url_for('static', filename='images/vector/logo.svg') }}" alt="logo">
+                </a>
+            </div>
+            
+            <!-- Юзерское меню (всегда видно) -->
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('user.shops') }}">Магазины</a></li>
+                    <li><a href="{{ url_for('user.news_list') }}">Новости</a></li>
+                    <li><a href="{{ url_for('user.about') }}">О нас</a></li>
+                    <li><a href="{{ url_for('user.for_tenants') }}">Арендаторам</a></li>
+                    <li><a href="{{ url_for('user.contacts') }}">Контакты</a></li>
+                </ul>
+            </nav>
+            
+
+            <div class="user-burger__menu">
+                <div class="bug-content">
+                    <div class="head">
+                        <div class="logo">
+                            <a href="{{ url_for('user.index') }}">
+                                <img src="{{ url_for('static', filename='images/vector/logo.svg') }}" alt="logo">
+                            </a>
+                        </div>
+                        <div class="close-burger__user"><img src="{{ url_for('static', filename='images/vector/burger-menu_close.svg') }}" alt="logo"></div>
+                    </div>
+                    <nav>
+                        <ul>
+                            <li><a href="{{ url_for('user.shema') }}">Схема этажей</a></li>
+                            <li><a href="{{ url_for('user.for_tenants') }}">Арендаторам</a></li>
+                            <li><a href="{{ url_for('user.shops') }}">Магазины</a></li>
+                            <li><a href="{{ url_for('user.news_list') }}">Новости</a></li>
+                            <li><a href="{{ url_for('user.about') }}">О нас</a></li>
+                            <li><a href="{{ url_for('user.contacts') }}">Контакты</a></li>
+                            <li><a href="{{ url_for('user.how_to_get') }}">Как добраться</a></li>
+                        </ul>
+                    </nav>
+
+                    <nav class="header-order__content">
+                        <ul>
+                            <li>10:00-22:00</li>
+                            <li><a href="tel:+7 (495) 228-95-20">+7 (495) 228-95-20</a></li>
+                        </ul>
+                    </nav>
+                
+                    
+                    <div class="send_button"><a href="{{ url_for('user.contacts') }}">Напишите нам</a></div>
+                </div>
+            </div>
+            
+            
+
+            <!-- Кнопка "Напишите нам" -->
+            <div class="co">
+                <div class="burger-menu__user">
+                    <img id="open-burger__user" src="{{ url_for('static', filename='images/vector/burger-menu.svg') }}" alt="logo">
+                    <img id="close-burger__user" src="{{ url_for('static', filename='images/vector/burger-menu_close.svg') }}" alt="logo">
+                </div>
+                <div class="send_button"><a href="{{ url_for('user.contacts') }}">Напишите нам</a></div>
+            </div>
+
+            <!-- Логин/логаут -->
+            <div class="admin-hidden">
+                {% if 'username' in session %}
+                    <li><a class="admin-link" href="{{ url_for('admin.edit') }}">Админка</a></li>
+                    <li><a class="out" href="{{ url_for('admin.logout') }}">Выйти</a></li>
+                {% else %}
+                    <li><a class="in" href="{{ url_for('admin.login') }}">Войти</a></li>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Админское меню (только для залогиненных) -->
+    {% if 'username' in session %}
+    <section class="admin-content">
+        <div class="content">
+            <div class="fake-logo"></div>
+            <div class="burger-menu__admin">
+                <li><a class="out" href="{{ url_for('admin.logout') }}">Выйти</a></li>
+                <img id="open-burger__admin" src="{{ url_for('static', filename='images/vector/burger-menu.svg') }}" alt="logo">
+                <img id="close-burger__admin" src="{{ url_for('static', filename='images/vector/burger-menu_close.svg') }}" alt="logo">
+            </div>
+
+            <div class="admin-burger__menu">
+                <div class="bug-content">
+                    <div class="head">
+                        <div class="logo">
+                            <a href="{{ url_for('user.index') }}">
+                                <img src="{{ url_for('static', filename='images/vector/logo.svg') }}" alt="logo">
+                            </a>
+                        </div>
+                        <div class="close-burger__admin"><img src="{{ url_for('static', filename='images/vector/burger-menu_close.svg') }}" alt="logo"></div>
+                    </div>
+
+                    <nav>
+                        <ul>
+                            <li><a href="{{ url_for('admin.edit') }}">Редактирование карты</a></li>
+                            <li><a href="{{ url_for('admin.admin_shops') }}">Магазины</a></li>
+                            <li><a href="{{ url_for('admin.admin_news') }}">Новости</a></li>
+                            <li><a href="{{ url_for('admin.admin_about') }}">О нас</a></li>
+                            <li><a href="{{ url_for('admin.admin_for_tenants') }}">Арендаторам</a></li>
+                            <li><a href="{{ url_for('admin.admin_contacts') }}">Контакты</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('admin.edit') }}">Редактирование карты</a></li>
+                    <li><a href="{{ url_for('admin.admin_shops') }}">Магазины</a></li>
+                    <li><a href="{{ url_for('admin.admin_news') }}">Новости</a></li>
+                    <li><a href="{{ url_for('admin.admin_about') }}">О нас</a></li>
+                    <li><a href="{{ url_for('admin.admin_for_tenants') }}">Арендаторам</a></li>
+                    <li><a href="{{ url_for('admin.admin_contacts') }}">Контакты</a></li>
+                </ul>
+            </nav>
+            <div class="fake-button"></div>
+        </div>
+    </section>
+    {% endif %}
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+        // Обработка для burger-menu__user и user-content
+        const burgerMenuUser = document.querySelector('.burger-menu__user');
+        const userContent = document.querySelector('.user-content');
+        const closeMenuUserBurger = document.querySelector('.close-burger__user');
+
+        if (burgerMenuUser && userContent) {
+            burgerMenuUser.addEventListener('click', function() {
+            userContent.classList.toggle('_open-burger');
+            });
+        }
+
+        if (burgerMenuUser && userContent) {
+            closeMenuUserBurger.addEventListener('click', function(){
+                userContent.classList.toggle('_open-burger');
+            });
+        }
+
+        // Обработка для burger-menu__admin и admin-content
+        const burgerMenuAdmin = document.querySelector('.burger-menu__admin');
+        const adminContent = document.querySelector('.admin-content');
+        const closeMenuAdminBurger = document.querySelector('.close-burger__admin');
+
+        if (burgerMenuAdmin && adminContent) {
+            burgerMenuAdmin.addEventListener('click', function() {
+            adminContent.classList.toggle('_open-burger');
+            });
+        }
+
+        if (burgerMenuUser && userContent) {
+            closeMenuAdminBurger.addEventListener('click', function(){
+                adminContent.classList.toggle('_open-burger');
+            });
+        }
+        });
+    </script>
+</header>

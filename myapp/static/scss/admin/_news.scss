@@ -1,0 +1,267 @@
+.admin-section.news-list-section {
+    margin-top: 64px; // Соответствует .category-section__page
+  
+    .content {
+      h1 {
+        font-size: 32px; // Соответствует .category-section__page h1
+        font-family: g-b; // Предполагается наличие такого шрифта
+        margin-bottom: 24px;
+      }
+  
+      .flashes {
+        list-style: none;
+        padding: 0;
+        margin-bottom: 16px;
+  
+        li {
+          padding: 8px 16px;
+          border-radius: 4px;
+  
+          &.success {
+            background-color: #28a745; // Пример цвета для success
+            color: #fff;
+          }
+  
+          &.error {
+            background-color: #dc3545; // Пример цвета для error
+            color: #fff;
+          }
+  
+          &.warning {
+            background-color: #ffc107; // Пример цвета для warning
+            color: #212529;
+          }
+  
+          &.info {
+            background-color: #17a2b8; // Пример цвета для info
+            color: #fff;
+          }
+        }
+      }
+  
+      .admin-actions {
+        margin-bottom: 24px;
+        display: flex;
+        gap: 16px;
+        align-items: center;
+  
+        .button {
+          background: #0B51B4; // Цвет кнопки из .category-section__page
+          color: #fff;
+          padding: 8px 16px;
+          border-radius: 3px;
+          cursor: pointer;
+          transition: .2s;
+          text-decoration: none; // Убираем подчеркивание у ссылки
+  
+          &:hover {
+            transition: .2s;
+            background: #fff;
+            color: #1B2028; // Цвет текста при наведении из .category-section__page
+          }
+  
+        //   &.button-primary {
+        //     // Можно добавить специфические стили для primary, если нужно
+        //   }
+        }
+      }
+  
+      .table-container {
+        background: #1B2028; // Цвет фона блока из .block, .category-list
+        border-radius: 4px;
+        padding: 16px;
+        overflow-x: auto; // Для горизонтальной прокрутки, если таблица большая
+  
+        .table {
+          width: 100%;
+          border-collapse: collapse;
+          color: #fff; // Цвет текста в таблице
+  
+          thead {
+            th {
+              padding: 12px;
+              text-align: left;
+              border-bottom: 1px solid #333A45; // Цвет разделителя
+            }
+          }
+  
+          tbody {
+            tr {
+              &:nth-child(even) {
+                background-color: #0E131B; // Цвет четных строк из .category-item
+              }
+  
+              td {
+                padding: 12px;
+                border-bottom: 1px solid #0E131B; // Цвет разделителя между строками
+                
+                &.news-shop{
+                    a{
+                        // text-decoration: line-through;
+                        background: #333A45;
+                        padding: 6px 16px;
+                        border-radius: 3px;
+                        transition: .2s;
+                        &:hover{
+                            transition: .2s;
+                            color: #1B2028;
+                            background: #fff;
+                        }
+                    }
+                }
+                // &.news-id,
+                // &.news-type,
+                // &.news-icon,
+                // &.news-title,
+                // &.news-shop,
+                // &.news-date,
+                // &.news-status,
+                // &.news-actions {
+                //   // Можно добавить специфические стили для ячеек, если нужно
+                // }
+  
+                &.news-actions{
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+
+                    > form{
+                        .button{
+                            width: 95px;
+                            text-align: center;
+                            transition: .2s;
+                            
+                            &:hover{
+                                transition: .2s;
+                                color: #0E131B;
+                                background: #fff;
+                            }
+                        }
+                    }
+                    a,button{
+                        padding: 8px 12px;
+                    }
+                    a,button,form{
+                        margin-right: 0;
+                    }
+                }
+                .badge {
+                    width: 100%;
+                    text-align: center;
+                    display: inline-block;
+                    padding: 8px 8px;
+                    border-radius: 3px;
+                    font-size: 0.8em;
+                    color: #fff;
+                    
+                  &.badge-info {
+                    background-color: #0086b6;
+                  }
+  
+                  &.badge-success {
+                    background-color: #28a745;
+                  }
+  
+                  &.badge-secondary {
+                    background-color: #6c757d;
+                  }
+                }
+  
+                .global-item {
+                  font-style: italic;
+                  color: #ccc;
+                }
+  
+                img {
+                  max-width: 30px;
+                  max-height: 30px;
+                  vertical-align: middle;
+                  border-radius: 3px;
+                }
+  
+                .action-form {
+                  display: inline;
+                  margin-right: 8px;
+                }
+  
+                .button-sm {
+                  padding: 4px 8px;
+                  font-size: 0.9em;
+                }
+  
+                .button-secondary {
+
+                  background-color: #1b2737;
+
+                  &:hover {
+                    background: #fff;
+                    color: #0E131B;
+                  }
+                }
+  
+                .button-success {
+                    background-color: #0b51b48b;
+                  &:hover {
+                    background: #fff;
+                    color: #1B2028;
+                  }
+                }
+  
+                .button-warning {
+                  background-color:  #e2aa00;
+                  color: #212529;
+                  &:hover {
+                    background: #fff;
+                    color: #0E131B;
+                  }
+                }
+  
+                .button-info {
+                  background-color: #0086b6;
+                  &:hover {
+                    background: #fff;
+                    color: #0E131B;
+                  }
+                }
+  
+                .button-danger {
+                  background-color: #c92738;
+                  &:hover {
+                    background: #fff;
+                    color: #0E131B;
+                  }
+                }
+  
+                .action-edit,
+                .action-view,
+                .action-delete,
+                .action-toggle {
+                  text-decoration: none;
+                  color: #fff;
+                  border: none;
+                  cursor: pointer;
+                  border-radius: 3px;
+                  transition: .2s;
+                  display: inline-block;
+                  margin-right: 4px;
+  
+                //   &:hover {
+                //     // Стилизуются выше для каждой кнопки отдельно
+                //   }
+                }
+              }
+            }
+          }
+        }
+      }
+  
+      .no-items-message {
+        background: #1B2028;
+        color: #ccc;
+        padding: 16px;
+        border-radius: 4px;
+        text-align: center;
+        margin-top: 24px;
+      }
+    }
+  }

@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{% block title %}Управление категориями{% endblock %}
+
+{% block content %}
+<section class="category-section__page category-section__admin">
+    <div class="content">
+        <h1>Управление категориями</h1>
+        
+        <div class="grid">
+            <!-- Блок для создания категории -->
+            <div class="block">
+                <button onclick="toggleCreateCategory()">Создать категорию</button>
+                <div class="menu" id="create-category-menu" style="display: none;">
+                    <div class="menu-ico">
+                        <span>Выберите иконку для категории</span>
+                        <div class="standart">
+                            <div class="sel-ico" onclick="selectIcon('child.svg')">
+                                <img src="{{ url_for('static', filename='uploads/category_icons/child.svg') }}" alt="Детские товары">
+                            </div>
+                            <div class="sel-ico" onclick="selectIcon('food.svg')">
+                                <img src="{{ url_for('static', filename='uploads/category_icons/food.svg') }}" alt="Еда">
+                            </div>
+                            <div class="sel-ico" onclick="selectIcon('razvlechenie.svg')">
+                                <img src="{{ url_for('static', filename='uploads/category_icons/razvlechenie.svg') }}" alt="Развлечения">
+                            </div>
+                            <div class="sel-ico" onclick="selectIcon('services.svg')">
+                                <img src="{{ url_for('static', filename='uploads/category_icons/services.svg') }}" alt="Услуги">
+                            </div>
+                            <div class="sel-ico" onclick="selectIcon('shop.svg')">
+                                <img src="{{ url_for('static', filename='uploads/category_icons/shop.svg') }}" alt="Магазин">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="menu">
+                        <span>Напишите название категории</span>
+                        <input type="text" id="category-name" placeholder="Название">
+                        <input type="hidden" id="selected-icon" value="">
+                        <button onclick="saveCategory()">Сохранить</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Блок для создания подкатегории -->
+            <div class="block">
+                <button onclick="toggleCreateSubcategory()">Создать подкатегорию</button>
+                <div class="menu" id="create-subcategory-menu" style="display: none;">
+                    <p>Выберите для какой категории хотите подключить эту подкатегорию</p>
+                    <div class="drop-menu" id="category-dropdown">
+                        {% for category in categories %}
+                            <div class="categ-item" onclick="selectCategoryForSubcategory({{ category.id }})">
+                                <img src="{{ url_for('static', filename='uploads/category_icons/' + category.icon_path) if category.icon_path else url_for('static', filename='images/vector/default-icon.svg') }}" alt="{{ category.name }}">
+                                <span>{{ category.name }}</span>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="menu">
+                        <span>Напишите название подкатегории</span>
+                        <input type="text" id="subcategory-name" placeholder="Название подкатегории">
+                        <input type="hidden" id="selected-category-id" value="">
+                        <button onclick="saveSubcategory()">Сохранить</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Список существующих категорий -->
+            <div class="category-list_control">
+                <h3>Список существующих категорий </h3>
+                <div class="category-list">
+                    {% for category in categories %}
+                        <div class="category-item">
+                            <div class="category-header">
+                                <img src="{{ url_for('static', filename='uploads/category_icons/' + category.icon_path) if category.icon_path else url_for('static', filename='images/vector/default-icon.svg') }}" alt="{{ category.name }}">
+                                <span>{{ category.name }}</span>
+                                <span class="count">[{{ category.shops.count() }}]</span>
+                            </div>
+                            <div class="category-actions">
+                                <a href="{{ url_for('admin.admin_category_edit', category_id=category.id) }}"><button>Редактировать</button></a> {# <-- ИСПРАВЛЕНО #}
+                                <button onclick="deleteCategory({{ category.id }})">Удалить</button>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Подключаем модальные окна -->
+        {% include 'components/modals.html' %}
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/category.js') }}"></script>
+{% endblock %}

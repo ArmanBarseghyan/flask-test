@@ -1,0 +1,174 @@
+{# templates/admin/news_create.html #}
+{% extends 'base.html' %} {# Или твой базовый админский шаблон, если он другой #}
+
+{% block title %}Создание новости/акции{% endblock %}
+
+{% block content %}
+<section class="admin-section">
+    <div class="content">
+        <h1>Создание новости или акции</h1>
+
+        {# Вывод flash-сообщений #}
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul class="flashes">
+                    {% for category, message in messages %}
+                        <li class="{{ category }}">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+
+        {# Кнопки выбора типа контента #}
+        <div class="news-type-selector" style="margin-bottom: 20px;">
+            <button type="button" id="create-news-btn" class="button">Создать новость</button>
+            <button type="button" id="create-promo-btn" class="button">Создать акцию</button>
+            {# Если новость создается для магазина, покажем это #}
+            {% if shop_id %}
+                <p style="margin-top: 10px;"><i>Создание для магазина: {{ shop_id }}</i></p>
+            {% endif %}
+        </div>
+
+        {# Секция для динамического добавления контента (пока пустая) #}
+        {# Эта секция будет появляться/заполняться с помощью JavaScript #}
+        <div id="news-content-editor" style="display: none; border: 1px solid #ccc; padding: 20px; margin-top: 20px;">
+            <h2>Редактор контента (<span id="content-type-display"></span>)</h2>
+
+            {# Форма для отправки данных на сервер #}
+            <form id="news-create-form" method="POST" action="{{ url_for('admin.admin_news_create') }}" enctype="multipart/form-data">
+          <p style="height: 1px; opacity: 0;">      {{ csrf_token() }} {# Обязательно для CSRF защиты #}</p>
+
+                {# Скрытые поля для передачи типа и shop_id #}
+                <input type="hidden" id="news-type" name="news_type" value="">
+                {% if shop_id %}
+                    <input type="hidden" name="shop_id" value="{{ shop_id }}">
+                {% endif %}
+
+                 {# --- Основные поля новости/акции --- #}
+                 <div class="form-group">
+                     <label for="news-title">Заголовок *</label>
+                     <input type="text" id="news-title" name="title" class="form-control" required>
+                 </div>
+
+                 <div class="form-group">
+                    <label for="news-short-description">Краткое описание (для карточки)</label>
+                    <textarea id="news-short-description" name="short_description" class="form-control" rows="3"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="news-icon">Иконка</label>
+                    {# Здесь будет механизм выбора иконки, аналогичный каталогу #}
+                    {# Пока можно простое поле или placeholder #}
+                    <select id="news-icon" name="icon" class="form-control">
+                        <option value="">-- Выберите иконку --</option>
+                        {# Сюда будем загружать иконки динамически или из списка #}
+                    </select>
+                    <div id="icon-preview" style="margin-top: 10px;"></div>
+                    {# Ссылка на управление иконками (если нужно) #}
+                     <small><a href="{{ url_for('admin.admin_category') }}#icon-management" target="_blank">Управление иконками</a></small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="news-banner">Главный баннер (изображение)</label>
+                    <input type="file" id="news-banner" name="banner_image" class="form-control-file" accept="image/png, image/jpeg, image/gif">
+                    {# Место для превью баннера (если нужно) #}
+                    <div id="banner-preview" style="margin-top: 10px;"></div>
+                </div>
+                {# --- Конец основных полей --- #}
+
+
+                <hr>
+                <h3>Блоки контента</h3>
+                {# Сюда JS будет добавлять блоки (заголовок, текст, картинка и т.д.) #}
+                <div id="content-blocks-container">
+                    {# Пример добавленного блока (для отладки, потом убрать) #}
+                    {# <div class="content-block" data-type="text">Тут будет блок... [Удалить] [Редактировать]</div> #}
+                </div>
+
+                {# Контейнер с кнопками добавления блоков #}
+                <div id="add-block-buttons" style="margin-top: 15px; border-top: 1px dashed #ccc; padding-top: 15px;">
+                    <button type="button" class="button button-secondary add-block-btn" data-block-type="heading">Добавить заголовок</button>
+                    <button type="button" class="button button-secondary add-block-btn" data-block-type="text">Добавить текст</button>
+                    <button type="button" class="button button-secondary add-block-btn" data-block-type="image">Добавить картинку</button>
+                    <button type="button" class="button button-secondary add-block-btn" data-block-type="list">Добавить список</button>
+                    <button type="button" class="button button-secondary add-block-btn" data-block-type="link">Добавить ссылку</button>
+                </div>
+                <hr>
+
+                {# Передаем скрытое поле для данных блоков контента #}
+                <input type="hidden" name="content_blocks_data" id="content-blocks-data-input">
+
+                {# Финальные кнопки формы #}
+                <div class="save-control">
+                    <button type="submit" class="button button-success">Сохранить</button>
+                    <button type="button" id="cancel-creation-btn" class="button button-danger">Отменить</button>
+                    <a href="{{ url_for('admin.admin_news') }}" class="button">Назад к списку</a> {# Ссылка на будущую страницу списка #}
+                </div>
+            </form>
+
+        </div>{# Конец #news-content-editor #}
+
+    </div>{# Конец .content #}
+</section>
+
+{# Подключаем JS для редактора (создадим его позже) #}
+<script src="{{ url_for('static', filename='js/admin_news_editor.js') }}?v={{ timestamp }}"></script> {# Добавляем версию для сброса кеша #}
+<script>
+    // Передаем URL для загрузки иконок в JS
+    const iconListUrl = "{{ url_for('admin.get_uploaded_icons') }}";
+    // Передаем URL для загрузки картинок новости
+    const newsImageUploadUrl = "{{ url_for('admin.upload_news_image') }}";
+    // Передаем CSRF токен
+    const csrfToken = "{{ csrf_token() }}";
+
+    // --- Инициализация иконки ---
+    // Функция для загрузки иконок (можно вынести в admin_news_editor.js, но для ясности пока тут)
+    async function fetchIcons(url) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+            const iconSelect = document.getElementById('news-icon');
+            const iconPreview = document.getElementById('icon-preview');
+
+            // Очищаем старые опции (кроме первой)
+            while (iconSelect.options.length > 1) {
+                iconSelect.remove(1);
+            }
+
+            // Добавляем иконки из uploads/category_icons
+            if (data.icons && data.icons.length > 0) {
+                data.icons.forEach(iconName => {
+                    const option = document.createElement('option');
+                    option.value = iconName;
+                    option.textContent = iconName; // Отображаем имя файла
+                    iconSelect.appendChild(option);
+                });
+            }
+
+            // Обновление превью при изменении
+            iconSelect.addEventListener('change', function() {
+                if (this.value) {
+                    iconPreview.innerHTML = `<img src="/static/uploads/category_icons/${this.value}" alt="Preview" style="max-width: 50px; max-height: 50px; vertical-align: middle;">`;
+                } else {
+                    iconPreview.innerHTML = '';
+                }
+            });
+
+        } catch (error) {
+            console.error('Ошибка загрузки иконок:', error);
+            // Можно показать сообщение пользователю
+        }
+    }
+
+    // Инициализация редактора при загрузке DOM
+    document.addEventListener('DOMContentLoaded', () => {
+        // Получаем иконки при загрузке страницы
+         fetchIcons(iconListUrl);
+         // Остальная инициализация редактора (кнопки и т.д.) будет в admin_news_editor.js
+    });
+</script>
+
+{% endblock %}

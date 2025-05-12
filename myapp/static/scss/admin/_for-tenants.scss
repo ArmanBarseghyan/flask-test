@@ -1,0 +1,381 @@
+// _for_tenants-page.scss
+
+.admin-tenants-page {
+  // Добавляем класс .content для отступов и ограничения ширины, если он еще не добавлен в HTML
+  &.content {
+    padding-top: 20px;
+    padding-bottom: 40px;
+  }
+
+  margin-top: 32px;
+  // Убираем фон и паддинги отсюда, если используем .content
+  // padding: 20px;
+  // background-color: #1B2028;
+  border-radius: 8px;
+  color: #cecece;
+
+  label {
+    font-size: 16px;
+    color: #cecece;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  input[type="text"]#shop-filter { // Применяем стили только к поиску
+    width: 100%;
+    padding: 10px 15px;
+    margin-bottom: 20px;
+    background-color: #333A45;
+    border: 1px solid #485364;
+    border-radius: 4px;
+    color: #cecece;
+    font-size: 16px;
+    box-sizing: border-box; // Учитываем padding и border в ширине
+
+    &::placeholder {
+      color: #888;
+    }
+
+    &:focus {
+      border-color: #0B51B4;
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(11, 81, 180, 0.3); // Легкая тень при фокусе
+    }
+  }
+
+  .page-title {
+    font-size: 28px;
+    font-family: 'g-b', sans-serif; // Убедись, что шрифт 'g-b' подключен
+    margin-bottom: 15px; // Уменьшил отступ
+    color: #fff;
+    font-weight: bold; // Добавил для жирности
+  }
+
+  .shop-count {
+    font-size: 18px;
+    margin-bottom: 20px; // Увеличил отступ
+    color: #adb5bd; // Сделал менее ярким
+
+    .count {
+      font-weight: bold;
+      color: #0B51B4; // Оставил синим
+      // color: #cc3333; // Или красным, если нужно акцентировать
+    }
+  }
+
+  // Стили для панели массовых действий
+  .bulk-actions-panel {
+    // ... существующие стили для панели ...
+    background-color: #272e38;
+    padding: 12px 15px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    border: 1px solid #485364;
+
+    span#selected-count {
+      font-weight: bold;
+      margin-right: 15px;
+      color: #e0e0e0;
+      white-space: nowrap;
+    }
+
+    .button { // Общие стили для кнопок на панели
+      margin-left: 0;
+      margin-right: 5px;
+      padding: 6px 12px;
+      font-size: 13px;
+      border: none; // Убедимся, что нет стандартной рамки
+      border-radius: 4px;
+      color: #fff;
+      cursor: pointer;
+      transition: background-color 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+
+      &:hover {
+        opacity: 0.9; // Легкое затухание при наведении
+      }
+      &:active {
+         transform: translateY(1px); // Небольшой эффект нажатия
+      }
+
+      // --- Цвета для конкретных кнопок ---
+      &.button-show { // Показать выбранные (Общая видимость)
+        background-color: #28a745; // Зеленый (успех)
+        border: 1px solid #28a745;
+        &:hover { background-color: #218838; border-color: #1e7e34;}
+      }
+      &.button-hide { // Скрыть выбранные (Общая видимость)
+        background-color: #ffc107; // Оранжевый (предупреждение)
+        border: 1px solid #ffc107;
+        color: #212529; // Темный текст для лучшей читаемости на оранжевом
+        &:hover { background-color: #e0a800; border-color: #d39e00;}
+      }
+      &.button-show-tenants { // Показать в арендаторах
+        background-color: #17a2b8; // Бирюзовый (инфо)
+        border: 1px solid #17a2b8;
+         &:hover { background-color: #138496; border-color: #117a8b;}
+      }
+       &.button-hide-tenants { // Скрыть в арендаторах
+         background-color: #6c757d; // Серый (вторичный)
+         border: 1px solid #6c757d;
+         &:hover { background-color: #5a6268; border-color: #545b62;}
+       }
+      &.button-danger { // Удалить выбранные
+        background-color: #dc3545; // Красный (опасность)
+        border: 1px solid #dc3545;
+        &:hover { background-color: #c82333; border-color: #bd2130;}
+      }
+    }
+  } // Конец .bulk-actions-panel
+
+  .shops-table-container {
+    overflow-x: auto;
+    border: 1px solid #272E38; // Рамка вокруг контейнера таблицы
+    border-radius: 6px; // Скругление углов контейнера
+    margin-bottom: 20px; // Отступ снизу
+  }
+
+  .shops-table {
+    width: 100%;
+    border-collapse: collapse;
+    // Убираем margin-bottom отсюда, т.к. он у контейнера
+
+    thead {
+      th {
+        background-color: #333A45;
+        color: #fff;
+        padding: 12px 16px;
+        text-align: left;
+        border-bottom: 2px solid #485364; // Более жирная нижняя граница заголовка
+        white-space: nowrap; // Запрет переноса заголовков
+        font-size: 14px; // Немного уменьшил шрифт заголовков
+
+        // Стили для колонки чекбокса в заголовке
+        &.checkbox-column {
+          width: 40px;
+          text-align: center;
+          padding-left: 10px;
+          padding-right: 10px;
+        }
+      }
+    }
+
+    tbody {
+      tr {
+        transition: background-color 0.15s ease-in-out, opacity 0.3s ease-in-out; // Убрал transition для height/padding
+        // overflow: hidden; // Убрал overflow
+
+        &.hidden {
+           // Скрываем строки через display: none для лучшей производительности
+           display: none;
+        }
+
+        // &.visible { // Класс visible не нужен, т.к. строки по умолчанию видимы
+        // }
+
+        &:nth-child(even) {
+          background-color: #21262e; // Немного изменил цвет для четных строк
+        }
+        &:nth-child(odd) {
+          background-color: #1B2028; // Цвет для нечетных строк
+        }
+
+        &:hover {
+           background-color: #2a313c; // Подсветка строки при наведении
+        }
+
+        td {
+          padding: 12px 16px; // Увеличил вертикальный padding
+          border-bottom: 1px solid #272E38;
+          font-size: 15px; // Стандартный размер шрифта ячеек
+          vertical-align: middle; // Выравнивание по центру
+
+          // Стили для колонки чекбокса в теле
+          &.checkbox-column {
+            width: 40px;
+            text-align: center;
+            padding-left: 10px;
+            padding-right: 10px;
+          }
+
+          // Стили статуса видимости
+          &.status-visible {
+            color: #38cf4d; // Более яркий зеленый
+            font-weight: normal; // Убрал жирность, цвет достаточен
+          }
+          &.status-hidden {
+            color: #e06c75; // Более мягкий красный
+            font-weight: normal;
+          }
+
+          // Стили статуса видимости для арендаторов
+          &.status-tenants-visible {
+            color: #38cf4d;
+            text-align: center;
+            width: 150px;
+          }
+          &.status-tenants-hidden {
+            color: #adb5bd; // Серый для "Нет"
+            text-align: center;
+            width: 150px;
+          }
+
+
+          // Стили для ячейки с действиями
+          &.actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: nowrap; // Запрещаем перенос кнопок действий
+            min-width: 360px; // Минимальная ширина, чтобы кнопки не сжимались сильно
+
+            // Стили для форм внутри ячейки
+            form {
+               margin: 0; // Убираем стандартные отступы формы
+            }
+
+             // Стили для кнопок внутри ячейки действий
+            .button {
+              padding: 8px 16px; // Уменьшаем кнопки
+              font-size: 13px;   // Уменьшаем шрифт
+              white-space: nowrap; // Запрещаем перенос текста на кнопках
+              border-radius: 3px;
+              &.button-hide, &.button-show {
+                background-color: #0B51B4;
+                width: auto; // Убираем фикс. ширину
+                min-width: 80px; // Минимальная ширина
+                text-align: center;
+                &:hover { background-color: #0a4392; } // Затемнение при ховере
+              }
+              &.button-show { background-color: #1d69d4; } // Чуть светлее для "Показать"
+              &.button-show:hover { background-color: #1a5bb8; }
+
+              &.button-hide-tenants, &.button-show-tenants {
+                 background-color: #495057; // Серый
+                 width: auto;
+                 min-width: 140px; // Шире для длинного текста
+                 text-align: center;
+                 &:hover { background-color: #5a6268; }
+               }
+              &.button-show-tenants { background-color: #5a6268; } // Чуть светлее
+              &.button-show-tenants:hover { background-color: #6c757d; }
+
+              &.button-edit {
+                background-color: #28a745; // Зеленый
+                 min-width: 100px;
+                &:hover { background-color: #218838; }
+              }
+            }
+          } // Конец td.actions
+        } // Конец td
+      } // Конец tr tbody
+    } // Конец tbody
+
+    // Стили для чекбоксов (вынесены для применения ко всем)
+    input[type="checkbox"].shop-checkbox,
+    input[type="checkbox"]#select-all-checkbox {
+        cursor: pointer;
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        width: 18px;
+        height: 18px;
+        border: 1px solid #6c757d;
+        border-radius: 3px;
+        display: inline-block;
+        position: relative;
+        vertical-align: middle;
+        background-color: #333A45;
+        transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out; // Плавный переход цвета
+
+        &:checked {
+            background-color: #0B51B4;
+            border-color: #0B51B4;
+
+            &::after {
+              content: '';
+              display: block;
+              width: 5px;
+              height: 10px;
+              border: solid white;
+              border-width: 0 2px 2px 0;
+              transform: rotate(45deg);
+              position: absolute;
+              left: 5px; // Позиционируем галочку
+              top: 1px;  // Позиционируем галочку
+            }
+        }
+
+        &:indeterminate {
+             background-color: #6c757d;
+             border-color: #6c757d;
+
+             &::after {
+                 content: '';
+                 display: block;
+                 width: 10px;
+                 height: 2px;
+                 background-color: white;
+                 position: absolute;
+                 left: 3px;
+                 top: 7px;
+                 transform: none;
+                 border: none;
+             }
+        }
+
+        &:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(11, 81, 180, 0.4); // Сделал тень чуть прозрачнее
+        }
+    } // Конец стилей чекбоксов
+
+  } // Конец .shops-table
+
+  .no-shops {
+    font-size: 16px;
+    color: #888; // Менее агрессивный цвет
+    text-align: center;
+    padding: 30px;
+  }
+
+  // Стили фильтра по этажам
+  .floor-filter {
+      margin: 20px 0; // Уменьшил вертикальные отступы
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      .floor-buttons {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .floor-button {
+        background-color: #333A45;
+        color: #cecece;
+        border: 1px solid #485364; // Добавил рамку кнопкам этажей
+        border-radius: 4px;
+        padding: 8px 16px;
+        cursor: pointer;
+        font-size: 15px; // Сделал шрифт чуть меньше
+        transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+
+        &:hover {
+          background-color: #475160;
+          border-color: #5a6268;
+        }
+
+        &.active {
+          background-color: #0B51B4;
+          border-color: #0B51B4;
+          color: #fff;
+        }
+      }
+    } // Конец .floor-filter
+
+} // Конец .admin-tenants-page

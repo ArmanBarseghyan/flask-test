@@ -1,0 +1,200 @@
+// --- СТИЛИ ДЛЯ СЕКЦИИ НОВОСТЕЙ МАГАЗИНА ---
+
+.shop-detail-news__section {
+    margin-top: 48px; // Отступ сверху для секции, можно настроить
+  
+    h2 {
+      font-family: g-b; // Используем жирный шрифт из вашего примера
+      font-size: 24px; // Размер заголовка секции
+      margin-bottom: 24px; // Отступ снизу от заголовка
+      color: #E0E0E0; // Цвет заголовка (можно #fff)
+    }
+  }
+  
+  .section-header{
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+    @media only screen and (max-width: 680px) {
+      justify-content: space-between;
+
+    }
+      h2{
+          font-size: 26px;
+          font-family: g-b;
+          @media only screen and (max-width: 680px) {
+            font-size: 18px;
+          }
+      }
+      a{
+        display: flex;
+        font-size: 16px;
+        padding: 4px 12px;
+        background: #1B2028;
+        color: #fff;
+        cursor: pointer;
+        border-radius: $card-border-radius;
+        &:hover{
+            background: #fff;
+            color: #1B2028;
+        }
+      }
+  }
+  .news-section__navigation{
+    margin-bottom: 42px;
+  }
+  .news-section{
+    margin-top: 72px;
+    @media only screen and (max-width: 680px) {
+      margin-top: 52px;
+    }
+  }
+  .shop-detail-news__content, .promt-section__navigation, .news-section__navigation {
+    display: grid;
+    
+    gap: 24px; // Промежуток между карточками
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    @media only screen and (max-width: 1200px) {
+      grid-template-columns: 1fr 1fr 1fr;
+      .news-card{
+        &:nth-child(3n){
+          display: none;
+        }
+      }
+    }
+
+    @media only screen and (max-width: 700px) {
+      display: flex;
+      overflow-x: auto;
+      padding-bottom: 16px;
+      .news-card{
+        width: 270px;
+        min-width: 270px;
+        &:nth-child(3n){
+          display: unset;
+        }
+      }
+    }
+    .no-news-message {
+      font-family: g-m; // Средний шрифт
+      font-size: 16px;
+      color: #82868D; // Приглушенный цвет текста
+      padding: 32px 16px;
+      background-color: #1B2028; // Фон как у инфоблока в примере
+      border-radius: 6px;
+      text-align: center;
+      grid-column: 1 / -1; // Растянуть на всю ширину грида, если нет новостей
+    }
+  }
+  .promt-section__navigation{
+    margin-bottom: 74px;
+  }
+
+ 
+  
+  .news-card,
+  .shop-news-card { // Применяем стили к обоим классам
+    background-color: #1B2028; // Темный фон карточки из вашего примера
+    border-radius: 6px;       // Скругление углов
+    overflow: hidden;         // Обрезаем все, что выходит за границы (для изображения)
+    transition: transform 0.2s ease, box-shadow 0.2s ease; // Плавный переход для ховера
+    display: flex;            // Используем flex для выравнивания содержимого внутри ссылки
+    flex-direction: column;   // Элементы карточки идут друг под другом
+  
+    &:hover {
+      transform: translateY(-5px); // Легкий подъем при наведении
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); // Тень при наведении
+    }
+  
+    .news-card-link {
+      text-decoration: none; // Убираем подчеркивание ссылки
+      color: inherit;        // Наследуем цвет текста
+      display: flex;         // Занимает всю карточку
+      flex-direction: column;
+      height: 100%;          // Растягиваем ссылку на всю высоту карточки
+    }
+  
+    .news-card-image {
+      height: 180px; // Фиксированная высота для изображения
+      background-color: #333A45; // Фон для случая, если изображение не загрузится
+  
+      img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover; // Масштабируем изображение, чтобы покрыть контейнер
+      }
+  
+      &.placeholder {
+        // Стили для заглушки, если нет изображения
+        background-color: #5A6D8D; // Другой фон для заглушки (из примера лого)
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        // Можно добавить псевдоэлемент с текстом или иконкой
+        &::before {
+          content: "Нет изображения"; // Пример текста
+          font-family: g-m;
+          font-size: 14px;
+          color: #1B2028;
+        }
+      }
+    }
+  
+    .news-card-body {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px; // Промежуток между элементами внутри тела карточки
+      flex-grow: 1; // Позволяет телу карточки занимать оставшееся пространство
+    }
+
+    .news-card-description{
+        color: #cecece;
+    }
+  
+    .news-card-type.badge {
+      padding: 4px 12px;
+      font-size: 12px;
+      font-family: g-m; // Используем средний шрифт
+      border-radius: 3px; // Делаем бейдж овальным
+      color: #fff;
+      align-self: flex-start; // Прижимаем к левому краю
+  
+      &.badge-success {
+        background-color: #28a745; // Зеленый для акций (стандартный bootstrap green)
+                                    // Или можно ваш фирменный зеленый: #087e08;
+      }
+  
+      &.badge-info {
+        background-color: #17a2b8; // Голубой для новостей (стандартный bootstrap info)
+                                    // Или можно ваш синий: #0B51B4;
+      }
+    }
+  
+    .news-card-title {
+      font-family: g-b; // Жирный шрифт для заголовка
+      font-size: 18px;
+      color: #E0E0E0; // Светлый цвет заголовка
+      margin: 0;
+      line-height: 1.4; // Межстрочный интервал
+  
+      // Опционально: ограничение на количество строк
+      // display: -webkit-box;
+      // -webkit-line-clamp: 3; // Максимум 3 строки
+      // -webkit-box-orient: vertical;
+      // overflow: hidden;
+      // text-overflow: ellipsis;
+    }
+  
+    .news-card-date {
+      font-family: g-m; // Средний шрифт для даты
+      font-size: 14px;
+      color: #82868D; // Приглушенный цвет даты (как в примере)
+      margin: 0;
+      margin-top: auto; // Прижимает дату к низу карточки, если есть свободное место
+    }
+  }
+  
+  // --- КОНЕЦ СТИЛЕЙ ДЛЯ СЕКЦИИ НОВОСТЕЙ ---

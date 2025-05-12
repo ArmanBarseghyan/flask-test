@@ -1,0 +1,100 @@
+{# templates/user/news_detail.html #}
+{% extends 'base.html' %} {# Твой базовый шаблон для пользовательской части #}
+
+{% block title %}{{ item.title }} - Новости и Акции{% endblock %}
+
+{% block content %}
+<section class="news-detail-section">
+    <div class="content">
+
+        {# --- ОТОБРАЖЕНИЕ БАННЕРА --- #}
+        {% if banner_url %}
+        <div class="news-detail-banner" style="margin-bottom: 30px;">
+            <img src="{{ banner_url }}" alt="{{ item.title }} - Баннер" style="width: 100%; max-height: 400px; object-fit: cover; border-radius: 5px;">
+        </div>
+        {% endif %}
+        {# --- КОНЕЦ БАННЕРА --- #}
+
+        {# --- НАЧАЛО БЛОКА ЗАГОЛОВКА И КНОПКИ --- #}
+        <div class="news-detail-header__control">
+            {# Основная информация о новости #}
+            <div class="news-detail-header">
+                {% if item.icon %}
+                    <div class="news-detail-icon">
+                        <img src="{{ url_for('static', filename='uploads/category_icons/' + item.icon) }}" alt="Иконка">
+                    </div>
+                {% endif %}
+                <div class="news-detail-title">
+                    <h1>{{ item.title }}</h1>
+                    <div class="news-detail-meta">
+                        {# Бейдж типа новости/акции #}
+                        {% if item.type == 'news' %}
+                            <span class="type-badge badge-info">Новость</span>
+                        {% elif item.type == 'promo' %}
+                            <span class="type-badge badge-success">Акция</span>
+                        {% endif %}
+                        {# Дата публикации #}
+                        <span>Опубликовано: {{ item.published_at.strftime('%d %B %Y') if item.published_at else item.created_at.strftime('%d %B %Y') }}</span>
+
+                        {# --- ИЗМЕНЕНИЕ ЗДЕСЬ --- #}
+                        {# Используем shop_info, переданный из Python #}
+                        {% if shop_info %}
+                            <span> | Магазин: <a href="{{ url_for('user.shop_detail', shop_id=shop_info.id) }}">{{ shop_info.name }}</a></span>
+                        {% endif %}
+                        {# --- КОНЕЦ ИЗМЕНЕНИЯ --- #}
+                    </div>
+                </div>
+            </div>
+
+            {# --- УСЛОВНАЯ КНОПКА "НА СТРАНИЦУ МАГАЗИНА" --- #}
+            {# --- ИЗМЕНЕНИЕ ЗДЕСЬ --- #}
+            {# Показываем кнопку ТОЛЬКО если shop_info существует #}
+            {% if shop_info %}
+            <div class="news-detail-action-button" style="margin-top: 15px;">
+                <a href="{{ url_for('user.shop_detail', shop_id=shop_info.id) }}" class="button button-primary">
+                    На страницу магазина
+                </a>
+            </div>
+            {% endif %}
+            {# --- КОНЕЦ УСЛОВНОЙ КНОПКИ --- #}
+        </div>
+        {# --- КОНЕЦ БЛОКА ЗАГОЛОВКА И КНОПКИ --- #}
+
+        {# Отображение блоков контента (без изменений) #}
+        <div class="news-detail-content">
+            {% if rendered_blocks %}
+                {% for block in rendered_blocks %}
+                    {# ... логика отображения блоков ... #}
+                     <div class="news-content-block news-content-{{ block.type }}">
+                        {% if block.type == 'heading' %}
+                            <h2>{{ block.content }}</h2>
+                        {% elif block.type == 'text' %}
+                            <p>{{ block.content | safe if block.allow_html else block.content }}</p> {# Пример с |safe, если нужно #}
+                        {% elif block.type == 'image' and block.full_url %}
+                            <img src="{{ block.full_url }}" alt="{{ item.title }} - изображение">
+                        {% elif block.type == 'list' %}
+                            <ul>
+                                {% for list_item in block['items'] %}
+                                    <li>{{ list_item }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% elif block.type == 'link' %}
+                            <p><a href="{{ user.block.url }}" target="_blank" rel="noopener noreferrer">{{ block.text }}</a></p>
+                        {% else %}
+                             <p><em>[Неподдерживаемый блок: {{ block.type }}]</em></p>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>Содержимое новости или акции пусто.</p>
+            {% endif %}
+        </div>
+
+        {# Кнопка "Назад к списку" (без изменений) #}
+        <div style="margin-top: 30px;">
+            <a href="{{ url_for('user.news_list') }}" class="button">← Назад к новостям</a>
+        </div>
+
+    </div>{# Конец .content #}
+</section>
+{% endblock %}

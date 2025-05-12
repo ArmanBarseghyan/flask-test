@@ -1,0 +1,84 @@
+<!-- components/modals.html -->
+<!-- Модальное окно для превью иконки -->
+<div class="icon-preview-modal" id="icon-preview" style="display: none;">
+    <div class="icon-preview-content">
+        <div>Для категории выбрана:
+            <div class="img">
+                <img id="preview-icon" src="" alt="Выбранная иконка">
+            </div>
+        </div>
+        <button onclick="closeIconPreview()">Закрыть</button>
+    </div>
+</div>
+
+<!-- Модальное окно успеха для категории -->
+<div class="success-modal" id="success-modal" style="display: none;">
+    <div class="success-content">
+        <div>Вы успешно создали категорию:</div>
+        <div class="category-info">
+            <span id="success-category-name"></span>
+            <div class="img">
+                <img id="success-category-icon" src="" alt="Иконка категории">
+            </div>
+        </div>
+        <button onclick="closeSuccessModal()">Закрыть</button>
+    </div>
+</div>
+
+<!-- Модальное окно подтверждения удаления (для category.html) -->
+<div class="confirm-delete-modal" id="confirm-delete-modal" style="display: none;">
+    <div class="confirm-delete-content">
+        <div>Вы уверены, что хотите удалить эту категорию?</div>
+        <div class="warning">Все связанные подкатегории и связи с магазинами будут удалены.</div>
+        <div class="confirm-buttons">
+            <button onclick="confirmDeleteCategory()">Да</button>
+            <button onclick="closeConfirmDeleteModal()">Нет</button>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно выбора категории для подкатегории -->
+<div class="subcategory-select-modal" id="subcategory-select-modal" style="display: none;">
+    <div class="subcategory-select-content">
+        <div>Выбрана категория:</div>
+        <div class="category-info">
+            <span id="selected-category-name"></span>
+            <div class="img">
+                <img id="selected-category-icon" src="" alt="Иконка категории">
+            </div>
+        </div>
+        <button onclick="closeSubcategorySelectModal()">Закрыть</button>
+    </div>
+</div>
+
+<!-- Модальное окно успеха для подкатегории -->
+<div class="subcategory-success-modal" id="subcategory-success-modal" style="display: none;">
+    <div class="subcategory-success-content">
+        <div>Вы успешно создали подкатегорию:</div>
+        <div class="subcategory-info">
+            <span id="success-subcategory-name"></span>
+        </div>
+        <button onclick="closeSubcategorySuccessModal()">Закрыть</button>
+    </div>
+</div>
+
+<!-- Модальное окно для ошибок -->
+<div class="error-modal" id="error-modal" style="display: none;">
+    <div class="error-content">
+        <div>Произошла ошибка:</div>
+        <span id="error-message"></span>
+        <button onclick="closeErrorModal()">Закрыть</button>
+    </div>
+</div>
+
+<!-- Новое модальное окно для подтверждения удаления категории (для category_detail.html) -->
+<div class="delete-confirm-modal" id="delete-confirm-modal-detail" style="display: none;">
+    <div class="delete-confirm-content">
+        <div>Вы уверены, что хотите удалить эту категорию?</div>
+        <div class="warning">Все связанные подкатегории и связи с магазинами будут удалены.</div>
+        <div class="confirm-buttons">
+            <button onclick="confirmDeleteCategoryDetail()">Да</button>
+            <button onclick="closeDeleteConfirmModal()">Нет</button>
+        </div>
+    </div>
+</div>

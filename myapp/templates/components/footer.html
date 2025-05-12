@@ -1,0 +1,55 @@
+<footer>
+    <div class="content">
+        <div class="footer-content">
+
+            <div class="grid">
+                <div class="logo-block">
+                    <div class="logo">
+                        <a href="{{ url_for('user.index') }}">
+                            <img src="{{ url_for('static', filename='images/vector/logo.svg') }}" alt="logo">
+                        </a>
+                        <!-- <p class="footer-description">Какое-то прикольное описание</p> -->
+                    </div>
+                    <span>© ТЦ “Измайловский”. Все права защищены.</span>
+                </div>
+                
+                <div class="footer-navigation">
+                    <nav>
+                        <ul>
+                            <li><a href="{{ url_for('user.about') }}">О нас</a></li>
+                            <li><a href="{{ url_for('user.news_list') }}">Новости</a></li>
+                            <li><a href="{{ url_for('user.contacts') }}">Контакты</a></li>
+                            <li><a href="{{ url_for('user.shops') }}">Магазины</a></li>
+                            <li><a href="{{ url_for('user.for_tenants') }}">Арендаторам</a></li>
+                        </ul>
+                    </nav>
+                    <nav class="header-order__content">
+                        <ul>
+                            <li><a href="{{ url_for('user.shema') }}">Схема этажей</a></li>
+                            <li><a href="{{ url_for('user.how_to_get') }}">Как добраться</a></li>
+                        </ul>
+                    </nav>
+                </div>
+    
+                <div class="contact-block">
+                    <div class="item">
+                        <h6>Наш адрес</h6>
+                        <p><a href="#">Первомайская, дом 42, Москва</a></p>
+                    </div>
+                    <div class="item">
+                        <h6>Контакты</h6>
+                        <p><a href="tel:+7 (495) 228-95-20">+7 (495) 228-95-20</a></p>
+                        <p><a href="mailto:info@izmaylovskiy.ru">info@izmaylovskiy.ru</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="political">
+            <a href="{{ url_for('user.privacy') }}">Политика Конфиденциальности</a>
+        </div>
+        <span class="fdate">2015 – 2025</span>
+    </div>
+</footer>

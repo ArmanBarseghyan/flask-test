@@ -1,0 +1,196 @@
+// static/scss/_news_detail_user.scss
+
+$primary-color: #0B51B4;
+$secondary-text-color: #CECECE;
+$accent-color: #FD4242;
+$divider-color: #333A45; // Цвет разделителя
+$card-border-radius: 4px;
+$large-spacing: 40px;
+$medium-spacing: 30px;
+$small-spacing: 20px;
+$base-font-size: 1em;
+$title-font-family: 'g-b', sans-serif;
+
+.news-detail-section {
+  margin-top: 64px; // Как в news_list_user.scss
+  padding: $small-spacing 0;
+  @media only screen and (max-width: 767px) {
+    margin-top: 32px;
+  }
+  .content {
+    .news-detail-banner {
+      margin-bottom: $medium-spacing;
+
+      img {
+        width: 100%;
+        max-height: 400px;
+        object-fit: cover;
+        border-radius: $card-border-radius;
+      }
+    }
+    .news-detail-header__control{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: $small-spacing;
+      border-bottom: 1px solid $divider-color;
+      margin-bottom: $medium-spacing;
+    }
+
+    .news-detail-action-button{
+      margin-top: 0;
+      a{
+        background: #0B51B4;
+        padding: 12px 32px;
+        border-radius: $card-border-radius;
+        &:hover{
+          color: #333A45;
+          background: #fff;
+        }
+      }
+    }
+    .news-detail-header {
+      display: flex;
+      align-items: center;
+      gap: $small-spacing;
+
+      @media only screen and (max-width: 1000px) {
+        flex-direction: column;
+        align-items: start;
+        gap: 8px;
+      }
+      .news-detail-icon {
+        img {
+          max-width: 60px;
+          max-height: 60px;
+          border-radius: 50%;
+          object-fit: cover;
+          border: 1px solid #333A45; // Как в news_list_user.scss
+        }
+      }
+
+      .news-detail-title {
+        h1 {
+          font-family: $title-font-family;
+          font-size: 1.8em; // Меньше, чем на странице списка
+          margin-bottom: 5px;
+          color: $secondary-text-color;
+        }
+
+        .news-detail-meta {
+          font-size: 0.9em;
+          color: $secondary-text-color;
+
+          .type-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 4px;
+            color: white;
+            font-size: 0.8em;
+            margin-right: 10px;
+
+            &.badge-info { background-color: #17a2b8; }
+            &.badge-success { background-color: #28a745; }
+          }
+        }
+      }
+    }
+
+    .news-detail-content {
+      line-height: 1.6;
+      font-size: 1em;
+      color: $secondary-text-color;
+      // white-space: pre-wrap;
+
+      .news-content-block {
+        margin-bottom: $small-spacing;
+
+        &.news-content-heading {
+          h2, h3, h4 {
+            font-family: $title-font-family;
+            margin-top: 1.5em;
+            margin-bottom: 0.8em;
+            line-height: 1.3;
+            color: $secondary-text-color;
+          }
+
+          h2 { font-size: 1.6em; }
+          h3 { font-size: 1.4em; }
+          h4 { font-size: 1.2em; }
+        }
+
+        &.news-content-text {
+          p {
+            margin-bottom: 1em;
+          }
+        }
+
+        &.news-content-image {
+          height: 300px;
+          width: 50%;
+          @media only screen and (max-width: 800px) {
+            width: 100%;
+            height: auto;
+          }
+          img {
+            object-fit: cover;
+            width: 100%;
+            // border-radius: 7px;
+            max-width: 100%;
+            height: auto;
+            border-radius: $card-border-radius;
+            margin-top: $small-spacing;
+            margin-bottom: $small-spacing;
+            display: block;
+          }
+        }
+
+        &.news-content-list {
+          ul {
+            list-style: disc;
+            margin-left: 25px;
+            margin-top: $small-spacing;
+            margin-bottom: $small-spacing;
+
+            li {
+              margin-bottom: 8px;
+            }
+          }
+        }
+
+        &.news-content-link {
+          a {
+            color: $primary-color;
+            text-decoration: underline;
+            font-weight: bold;
+
+            &:hover {
+              color: darken($primary-color, 10%);
+            }
+          }
+        }
+      }
+    }
+
+    > div[style*="margin-top: 30px;"] { // Кнопка "Назад к новостям"
+      margin-top: $medium-spacing;
+      text-align: left; // Выравниваем влево
+
+      a.button {
+        cursor: pointer;
+        padding: 8px 20px; // Меньшие отступы
+        background: #333A45; // Цвет кнопки как в news_list_user.scss
+        border-radius: 3px;
+        font-size: 0.9em;
+        color: $secondary-text-color;
+        text-decoration: none;
+        transition: background-color 0.2s;
+
+        &:hover {
+          background: #fff;
+          color: #333A45;
+        }
+      }
+    }
+  }
+}

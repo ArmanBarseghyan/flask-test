@@ -1,0 +1,36 @@
+{# templates/components/news_card.html #}
+{# Ожидает переменную 'item' в контексте #}
+<!-- <div class="swiper-slide"> -->
+    <div class="news-card"> {# Вы можете добавить класс promo-card если нужны разные стили: news-card {% if item.type == 'promo' %}promo-card{% endif %} #}
+        <a href="{{ url_for('user.user_news_detail', news_id=item.id) }}" class="news-card-link">
+            {# Изображение-баннер новости (если есть) #}
+            <div class="news-card-image">
+                {% if item.banner_url %}
+                    <img src="{{ item.banner_url }}" alt="{{ item.title }}" loading="lazy"> {# Добавим lazy loading #}
+                {% else %}
+                    {# Можно добавить общую заглушку SVG или CSS фон #}
+                    <div class="placeholder-image" aria-label="Нет изображения"></div>
+                {% endif %}
+            </div>
+
+            <div class="news-card-body">
+                {# Тип новости/акции #}
+                <span class="news-card-type badge {% if item.type == 'promo' %}badge-success{% else %}badge-info{% endif %}">
+                    {% if item.type == 'promo' %}Акция{% else %}Новость{% endif %}
+                </span>
+                {# Заголовок новости #}
+                <h4 class="news-card-title">{{ item.title }}</h4> {# Используем h4 для семантики на главной #}
+
+                {# Краткое описание (если передано) #}
+                {% if item.short_description %}
+                <p class="news-card-description">{{ item.short_description | truncate(80, True) }}</p> {# Обрезаем описание #}
+                {% endif %}
+
+                {# Дата публикации #}
+                <p class="news-card-date">
+                    {{ item.published_at.strftime('%d.%m.%Y') if item.published_at else 'Дата не указана' }}
+                </p>
+            </div>
+        </a>
+    </div>
+<!-- </div> -->
